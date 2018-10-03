@@ -1,8 +1,8 @@
 #!/bin/bash
 
-KC_ISSUER=$KC_SERVER/auth/realms/$KC_REALM
- 
-ID_64=$(echo ${KC_CLIENT_ID} | base64)
+KC_CLIENT_ID_64=$(echo ${KC_CLIENT_ID} | base64)
+
+echo Updating Api with Policy ${POL_ID}
 
 up='{
 "openid_options": {
@@ -10,7 +10,7 @@ up='{
         {
           "issuer": "'"${KC_ISSUER}"'",
           "client_ids": {
-            "'"${ID_64}"'": "'"$POL_ID"'"
+            "'"${KC_CLIENT_ID_64}"'": "'"$POL_ID"'"
           }
         }
       ],
@@ -22,6 +22,5 @@ up='{
 
 API_NEW=$(echo $API_DEF __TOTO__ $up | python -c 'import json,sys;l=sys.stdin.read().split("__TOTO__"); d=json.loads(l[0]); d.update(json.loads(l[1]));nd={"api_definition": d} ; print json.dumps(nd)')
 
-
-curl  -X PUT   -H "Content-Type: application/json" -d  "${API_NEW}"  -H "authorization: $USER_AUTH" http://$DOCKER_IP:3000/api/apis/$API_DB_ID
-
+curl  -X PUT   -H "Content-Type: application/json" -d  "${API_NEW}"  -H "authorization: $USER_AUTH" http://$DOCKER_IP:$TYK_DASH_PORT/api/apis/$API_DB_ID
+echo

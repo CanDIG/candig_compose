@@ -1,5 +1,7 @@
 #!/bin/bash
-export POLICY_NAME="Candig policy"
+
+
+echo Creating policy "$POLICY_NAME" for API "$API_NAME":"$API_ID"
 
 POL_DATA=$(curl -X POST -H "authorization: $USER_AUTH" \
   -s \
@@ -23,7 +25,9 @@ POL_DATA=$(curl -X POST -H "authorization: $USER_AUTH" \
     "quota_max": 10000,
     "quota_renewal_rate": 3600,
     "tags": ["Startup Users"]
-}' http://$DOCKER_IP:3000/api/portal/policies)
+}' http://$DOCKER_IP:$TYK_DASH_PORT/api/portal/policies)
+
 export POL_ID=$(echo $POL_DATA | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["Message"]')
 
+echo Policy ID: $POL_ID
 

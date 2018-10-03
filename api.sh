@@ -1,13 +1,3 @@
-export API_NAME="Candig Api"
-export TYK_SERVER="http://tyk-gateway:8080"
-export KC_REALM='CanDIG'
-export KC_CLIENT_ID='ga4gh'
-export KC_SECRET=
-export KC_SERVER='http://keycloak:8080'
-export KC_LOGIN_REDIRECT_PATH="login_iocd"
-export TYK_LISTEN=
-export CANDIG_SERVER="http://server"
-
 VAR='{
       "api_definition": {
   "session_provider": {
@@ -232,16 +222,18 @@ VAR='{
 }'
 
 
+echo CREATING API
 ret_val=$(curl -H "Authorization: $USER_AUTH" \
   -s \
   -H "Content-Type: application/json" \
   -X POST \
-  -d "${VAR}" http://$DOCKER_IP:3000/api/apis/ 2>&1)
+  -d "${VAR}" http://$DOCKER_IP:$TYK_DASH_PORT/api/apis/ 2>&1)
 
 export API_DB_ID=$(echo $ret_val | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["Meta"]')
-export API_DEF=$(curl --silent --header "authorization: $USER_AUTH" http://$DOCKER_IP:3000/api/apis/$API_DB_ID |  python -c 'import json,sys;obj=json.load(sys.stdin);print json.dumps(obj["api_definition"])')
+export API_DEF=$(curl --silent --header "authorization: $USER_AUTH" http://$DOCKER_IP:$TYK_DASH_PORT/api/apis/$API_DB_ID |  python -c 'import json,sys;obj=json.load(sys.stdin);print json.dumps(obj["api_definition"])')
 export API_ID=$(echo $API_DEF |  python -c 'import json,sys;obj=json.load(sys.stdin);print obj["api_id"]')
 
+echo API ID: $API_ID
 
 
 
