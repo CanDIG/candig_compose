@@ -136,7 +136,13 @@ VAR='{
   "disable_rate_limit": false,
   "custom_middleware_bundle": "",
   "custom_middleware": {
-    "pre": [],
+    "pre": [
+        {
+          "name": "authMiddleware",
+          "path": "/opt/tyk-gateway/middleware/authMiddleware.js",
+          "require_session": false
+        }
+     ],
     "id_extractor": {
       "extract_with": "",
       "extract_from": "",
@@ -163,7 +169,7 @@ VAR='{
     "tyk_host": "'"${TYK_SERVER}"'",
     "keycloak_realm": "'"${KC_REALM}"'",
     "keycloak_client": "'"${KC_CLIENT_ID}"'",
-    "tyk_listen": "'"$TYK_LISTEN"'",
+    "tyk_listen": "'"${TYK_LISTEN_PATH}"'",
     "keycloak_host": "'"${KC_SERVER}"'",
     "keycloak_secret": "'"${KC_SECRET}"'"
   },
@@ -199,7 +205,7 @@ VAR='{
   "use_keyless": false,
   "enable_batch_request_support": false,
   "upstream_certificates": {},
-  "org_id": "'"$ORG_ID"'",
+  "org_id": "'"${ORG_ID}"'",
   "pinned_public_keys": {},
   "use_mutual_tls_auth": false,
   "use_basic_auth": false,
@@ -222,7 +228,7 @@ VAR='{
 }'
 
 
-echo CREATING API
+echo CREATING A TYK API 
 ret_val=$(curl -H "Authorization: $USER_AUTH" \
   -s \
   -H "Content-Type: application/json" \

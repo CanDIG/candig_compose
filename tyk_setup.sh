@@ -8,33 +8,39 @@
 #
 # $> ./tyk_setup.sh {IP ADDRESS:PORT of the tyk gateway}
 
+CONFIG_PATH=/media/candig_conf
 
 TYK_ORGANOSATION="Secure Cloud CQ"
 TYK_ORG_SHORT_NAME="SCCQ"
 TYK_DASH_PORT="3000"
 
 # the path where config and secrets are stored
-CONFIG_PATH=/media/candig_conf/tyk/confs
 # Tyk dashboard settings
-source $CONFIG_PATH/tyk_secret
+TYK_CONFIG_PATH=$CONFIG_PATH/tyk/confs
+source $TYK_CONFIG_PATH/tyk_secret
 #set a default user
 TYK_DASHBOARD_USERNAME=$CANDIG_TYK_USERNAME
 TYK_DASHBOARD_PASSWORD=$CANDIG_TYK_PASSWORD
-TYK_ADMIN_API_PASSWORD=$(cat $CONFIG_PATH/tyk_analytics.conf  | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["admin_secret"]')
+TYK_ADMIN_API_PASSWORD=$(cat $TYK_CONFIG_PATH/tyk_analytics.conf  | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["admin_secret"]')
 TYK_ORG_FN="Omni"
 TYK_ORG_LN="Potent"
 
+TYK_API_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+sed -r 's/secret": "[a-zA-Z0-9]*"/secret": "'"$TYK_API_SECRET"'"/g'   /media/candig_conf/tyk/confs/tyk.conf 
+sed -r 's/secret": "[a-zA-Z0-9]*"/secret": "'"$TYK_API_SECRET"'"/g'   /media/candig_conf/tyk/confs/tyk_analytics.conf 
+
 
 #API CONFIG
+source $CONFIG_PATH/ga4gh_server/config.py 2>/dev/null 
 export API_NAME="Candig Api"
-export TYK_SERVER="http://tyk-gateway:8080"
-export KC_REALM='CanDIG'
-export KC_CLIENT_ID='ga4gh'
-export KC_SECRET=
-export KC_SERVER='http://keycloak:8080'
-export KC_LOGIN_REDIRECT_PATH="login_iocd"
-export TYK_LISTEN=
-export CANDIG_SERVER="http://server"
+export TYK_SERVER
+export KC_REALM
+export KC_CLIENT_ID
+export KC_SECRET
+export KC_SERVER
+export KC_LOGIN_REDIRECT_PATH
+export TYK_LISTEN_PATH
+export CANDIG_SERVER="server:80"
 export KC_ISSUER=${KC_SERVER}/auth/realms/${KC_REALM}
 
 
@@ -44,9 +50,10 @@ export POLICY_NAME="Candig policy"
 
 
 # Tyk portal settings
-TYK_PORTAL_DOMAIN="www.tyk-portal-local.com"
-TYK_DASH_DOMAIN="www.tyk-local.com"
-source ${CONFIG_PATH}/hosts
+TYK_PORTAL_DOMAIN="localhost:3000"
+TYK_DASH_DOMAIN="candig.calculquebec.ca"
+
+source ${TYK_CONFIG_PATH}/hosts
 TYK_PORTAL_PATH="/portal/"
 
 DOCKER_IP="127.0.0.1"
@@ -117,8 +124,8 @@ echo "Portal: http://$TYK_PORTAL_DOMAIN:$TYK_DASH_PORT$TYK_PORTAL_PATH"
 echo ""
 
 
-source api.sh
-source policies.sh
-source update_api.sh
+source tyk_api.sh
+source tyk_policies.sh
+source update_tyk_api.sh
 
 echo "DONE"

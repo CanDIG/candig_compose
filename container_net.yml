@@ -10,7 +10,7 @@ services:
     depends_on:
     - tyk-redis
     - tyk-mongo
-  tyk-gateway:
+  candig.calculquebec.ca:
     image: tykio/tyk-gateway:v2.7.1
     ports:
     - "8080:8080"
@@ -25,9 +25,9 @@ services:
     depends_on:
     - tyk-redis
     - tyk-mongo
-    - tyk-gateway
+    - candig.calculquebec.ca
   tyk-redis:
-    image: redis
+    image: redis:4.0.11-stretch
     ports:
     - "6379:6379"
     volumes:
@@ -43,23 +43,23 @@ services:
     - mongo-data:/data/db
     networks:
     - tyk
-  keycloak:
-    image: c3genomics/keycloak:0.1
+  candigauth.calculquebec.ca:
+    image: c3genomics/keycloak:0.4
     ports: 
     - "9990:9990"
     - "9993:9993"
     - "8009:8009"
-    - "8081:8080"
+    - "8081:8081"
     - "8443:8443"
     - "4712:4712"
     - "4713:4713"
     networks:
     - tyk
   server:
-    image: c3genomics/ga4gh_flask:0.2
+    image: c3genomics/ga4gh_server:0.3
     #command: ["--host", "0.0.0.0", "--port", "80", "--workers", "2"]
-    ports:
-    - "80:80"
+    #ports:
+    #- "80:80"
     networks:
     - tyk
 
