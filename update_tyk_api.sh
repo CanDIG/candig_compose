@@ -14,7 +14,30 @@ up='{
           }
         }
       ],
-      "segregate_by_client": false
+      "segregate_by_client": false,
+      "custom_middleware": {
+        "pre": [
+            {
+              "name": "authMiddleware",
+              "path": "/opt/tyk-gateway/middleware/authMiddleware.js",
+              "require_session": false
+            }
+         ],
+        "id_extractor": {
+          "extract_with": "",
+          "extract_from": "",
+          "extractor_config": {}
+        },
+        "driver": "",
+        "auth_check": {
+          "path": "",
+          "require_session": false,
+          "name": ""
+        },
+        "post_key_auth": [],
+        "post": [],
+        "response": []
+      }
 }
 }'
 

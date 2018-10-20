@@ -8,16 +8,15 @@
 #
 # $> ./tyk_setup.sh {IP ADDRESS:PORT of the tyk gateway}
 
-CONFIG_PATH=/media/candig_conf
-
 TYK_ORGANOSATION="Secure Cloud CQ"
 TYK_ORG_SHORT_NAME="SCCQ"
 TYK_DASH_PORT="3000"
 
 # the path where config and secrets are stored
 # Tyk dashboard settings
-TYK_CONFIG_PATH=$CONFIG_PATH/tyk/confs
-source $TYK_CONFIG_PATH/tyk_secret
+TYK_CONFIG_PATH=${CONFIG_PATH}/tyk/confs
+source ${TYK_CONFIG_PATH}/tyk_secret
+
 #set a default user
 TYK_DASHBOARD_USERNAME=$CANDIG_TYK_USERNAME
 TYK_DASHBOARD_PASSWORD=$CANDIG_TYK_PASSWORD
@@ -26,12 +25,13 @@ TYK_ORG_FN="Omni"
 TYK_ORG_LN="Potent"
 
 TYK_API_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-sed -r 's/secret": "[a-zA-Z0-9]*"/secret": "'"$TYK_API_SECRET"'"/g'   /media/candig_conf/tyk/confs/tyk.conf 
-sed -r 's/secret": "[a-zA-Z0-9]*"/secret": "'"$TYK_API_SECRET"'"/g'   /media/candig_conf/tyk/confs/tyk_analytics.conf 
+sed -r 's/secret": "[a-zA-Z0-9]*"/secret": "'"$TYK_API_SECRET"'"/g'   ${TYK_CONFIG_PATH}/tyk.conf
+sed -r 's/secret": "[a-zA-Z0-9]*"/secret": "'"$TYK_API_SECRET"'"/g'   ${TYK_CONFIG_PATH}/tyk_analytics.conf
 
 
-#API CONFIG
-source $CONFIG_PATH/ga4gh_server/config.py 2>/dev/null 
+#API CONFIG Source the python file like a bash one, Only vars are define,
+# make sure they are written in a BASH WAY, (no space around "=")
+source $CONFIG_PATH/ga4gh_server/config.py 2>/dev/null
 export API_NAME="Candig Api"
 export TYK_SERVER
 export KC_REALM
@@ -43,17 +43,15 @@ export TYK_LISTEN_PATH
 export CANDIG_SERVER="server:80"
 export KC_ISSUER=${KC_SERVER}/auth/realms/${KC_REALM}
 
-
 # POLICY CONFIGs
 export POLICY_NAME="Candig policy"
 
-
+DOM=$(echo $TYK_SERVER | cut -f1 -d:)
 
 # Tyk portal settings
-TYK_PORTAL_DOMAIN="localhost:3000"
-TYK_DASH_DOMAIN="candig.calculquebec.ca"
+TYK_PORTAL_DOMAIN="${DOM}"
+TYK_DASH_DOMAIN="${DOM}"
 
-source ${TYK_CONFIG_PATH}/hosts
 TYK_PORTAL_PATH="/portal/"
 
 DOCKER_IP="127.0.0.1"

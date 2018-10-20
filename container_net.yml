@@ -11,7 +11,11 @@ services:
     - tyk-redis
     - tyk-mongo
   candig.calculquebec.ca:
-    image: tykio/tyk-gateway:v2.7.1
+    #environment:
+      #- TYKSECRET=
+      #- TYKSECRET=comme.un.cave.je.chercher.un.gros.cadena
+    image: tykio/tyk-gateway:v2.6.2
+    #image: gate
     ports:
     - "8080:8080"
     networks:
@@ -56,10 +60,10 @@ services:
     networks:
     - tyk
   server:
-    image: c3genomics/ga4gh_server:0.3
+    image: c3genomics/ga4gh_server:0.4
     #command: ["--host", "0.0.0.0", "--port", "80", "--workers", "2"]
-    #ports:
-    #- "80:80"
+    ports:
+    - "80:80"
     networks:
     - tyk
 

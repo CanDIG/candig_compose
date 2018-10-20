@@ -1,15 +1,16 @@
 #!/bin/bash
 
-source /media/candig_conf/keycloak/configuration/secrets
-source /media/candig_conf/ga4gh_server/config.py 2> /dev/null
+source $CONFIG_PATH/keycloak/configuration/secrets
+source $CONFIG_PATH/ga4gh_server/config.py 2> /dev/null
 
 # Default values
-export KC_HOST=candigauth.calculquebec.ca
-export KC_PORT=8081
+export KC_HOST=$(echo $KC_SERVER | cut -f1 -d:)
+export KC_PORT=$(echo $KC_SERVER | cut -f2 -d:)
+TYK_DOMAIN=$(echo $TYK_SERVER | cut -f1 -d:)
 
 
 usage () {
-  
+
   echo "${0} [<keycloak host> <keycloak api port>]"
 
 }
@@ -24,10 +25,10 @@ elif [[ $# -eq 2 ]]; then
 elif [[ $# -gt 2 ]]; then
   usage
   exit 1
-fi 
+fi
 
 
-# FUNCTIONS 
+# FUNCTIONS
 
 valid_json () {
 
@@ -38,13 +39,13 @@ valid_json () {
   if [ $ret_val = 0 ]; then
      echo JSON is valid
   else
-     echo JSON is not valid 
+     echo JSON is not valid
      exit $ret_val
   fi
 
 }
 
-############### 
+###############
 
 get_token () {
   BID=$(curl \
@@ -52,7 +53,7 @@ get_token () {
     -d "username=$KC_ADMIN_USER" \
     -d "password=$KC_PW" \
     -d "grant_type=password" \
-    "http://${KC_HOST}:${KC_PORT}/auth/realms/master/protocol/openid-connect/token" 2> /dev/null ) 
+    "http://${KC_HOST}:${KC_PORT}/auth/realms/master/protocol/openid-connect/token" 2> /dev/null )
   echo ${BID} | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["access_token"]'
 }
 
@@ -70,7 +71,7 @@ set_realm () {
   curl \
     -H "Authorization: bearer ${KC_TOKEN}" \
     -X POST -H "Content-Type: application/json"  -d "${JSON}" \
-    "http://${KC_HOST}:${KC_PORT}/auth/admin/realms" 
+    "http://${KC_HOST}:${KC_PORT}/auth/admin/realms"
 
 }
 
@@ -111,7 +112,7 @@ redirect=$4
   "standardFlowEnabled": true,
   "publicClient": false,
   "redirectUris": [
-   "http://candig.calculquebec.ca/'${listen}${redirect}'"
+   "'${TYK_SERVER%/}/${listen}${redirect}'"
    ],
   "attributes": {
     "saml.assertion.signature": "false",
@@ -131,7 +132,7 @@ redirect=$4
   curl \
     -H "Authorization: bearer ${KC_TOKEN}" \
     -X POST -H "Content-Type: application/json"  -d "${JSON}" \
-    "http://${KC_HOST}:${KC_PORT}/auth/admin/realms/${realm}/clients" 
+    "http://${KC_HOST}:${KC_PORT}/auth/admin/realms/${realm}/clients"
 }
 
 get_secret () {
@@ -155,10 +156,8 @@ echo Create realm ${KC_REALM}
 set_realm ${KC_REALM}
 
 
-echo create_client ${KC_CLIENT_ID} 
+echo create_client ${KC_CLIENT_ID}
 set_client ${KC_REALM} ${KC_CLIENT_ID} "${TYK_LISTEN_PATH}" ${KC_LOGIN_REDIRECT_PATH}
 
 echo getting kc client secret
 export KC_SECRET=$(get_secret)
-
-
