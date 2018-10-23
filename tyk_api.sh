@@ -45,7 +45,7 @@ VAR='{
     "enable_load_balancing": false,
     "strip_listen_path": true,
     "target_list": [],
-    "listen_path": "/",
+    "listen_path": "/'"${TYK_LISTEN_PATH#/}"'",
     "preserve_host_header": false,
     "check_host_against_uptime_tests": false,
     "transport": {

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-KC_CLIENT_ID_64=$(echo ${KC_CLIENT_ID} | base64)
+KC_CLIENT_ID_64=$(echo -n ${KC_CLIENT_ID} | base64)
 
 echo Updating Api with Policy ${POL_ID}
 
