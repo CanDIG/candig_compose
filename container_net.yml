@@ -11,11 +11,7 @@ services:
     - tyk-redis
     - tyk-mongo
   candig.calculquebec.ca:
-    #environment:
-      #- TYKSECRET=
-      #- TYKSECRET=comme.un.cave.je.chercher.un.gros.cadena
     image: tykio/tyk-gateway:v2.6.2
-    #image: gate
     ports:
     - "8080:8080"
     networks:
