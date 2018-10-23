@@ -13,6 +13,6 @@ services:
   candigauth.calculquebec.ca:
     volumes:
     - /media/candig_conf/keycloak/configuration/secrets:/opt/keycloak_conf/secrets
-  server:
+  ga4gh_server:
     volumes:
     - /media/candig_conf/ga4gh_server/config.py:/opt/ga4gh_server/config.py

@@ -59,9 +59,9 @@ services:
     - "4713:4713"
     networks:
     - tyk
-  server:
-    image: c3genomics/ga4gh_server:0.4
-    #command: ["--host", "0.0.0.0", "--port", "80", "--workers", "2"]
+  ga4gh_server:
+    image: c3genomics/ga4gh_server:0.5
+    #entrypoint: ["ga4gh_server", "--host", "0.0.0.0", "--port", "80", "-c", "TykConfig"]
     ports:
     - "80:80"
     networks:

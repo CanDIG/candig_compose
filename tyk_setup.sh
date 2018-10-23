@@ -40,7 +40,7 @@ export KC_SECRET
 export KC_SERVER
 export KC_LOGIN_REDIRECT_PATH
 export TYK_LISTEN_PATH
-export CANDIG_SERVER="server:80"
+export CANDIG_SERVER="http://ga4gh_server:80"
 export KC_ISSUER=${KC_SERVER}/auth/realms/${KC_REALM}
 
 # POLICY CONFIGs
