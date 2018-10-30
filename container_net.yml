@@ -46,18 +46,11 @@ services:
   candigauth.calculquebec.ca:
     image: c3genomics/keycloak:0.4
     ports: 
-    - "9990:9990"
-    - "9993:9993"
-    - "8009:8009"
     - "8081:8081"
-    - "8443:8443"
-    - "4712:4712"
-    - "4713:4713"
     networks:
     - tyk
   ga4gh_server:
-    image: c3genomics/ga4gh_server:0.5
-    #entrypoint: ["ga4gh_server", "--host", "0.0.0.0", "--port", "80", "-c", "TykConfig"]
+    image: c3genomics/ga4gh_server:0.6
     ports:
     - "80:80"
     networks:
