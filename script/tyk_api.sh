@@ -29,7 +29,7 @@ VAR='{
   "jwt_disable_issued_at_validation": false,
   "tag_headers": [],
   "proxy": {
-    "target_url": "'"${CANDIG_SERVER}"'",
+    "target_url": "'"${LOCAL_CANDIG_SERVER}"'",
     "service_discovery": {
       "target_path": "",
       "endpoint_returns_list": false,
@@ -166,11 +166,11 @@ VAR='{
   },
   "use_oauth2": false,
   "config_data": {
-    "tyk_host": "'"${TYK_SERVER}"'",
+    "tyk_host": "'"${CANDIG_PUBLIC_URL}:${CANDIG_PUBLIC_PORT}"'",
     "keycloak_realm": "'"${KC_REALM}"'",
     "keycloak_client": "'"${KC_CLIENT_ID}"'",
     "tyk_listen": "'"${TYK_LISTEN_PATH}"'",
-    "keycloak_host": "'"${KC_SERVER}"'",
+    "keycloak_host": "'"${KC_PUBLIC_URL}:${KC_PUBLIC_PORT}"'",
     "keycloak_secret": "'"${KC_SECRET}"'"
   },
   "openid_options": {

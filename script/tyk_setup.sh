@@ -10,47 +10,32 @@
 
 TYK_ORGANOSATION="Secure Cloud CQ"
 TYK_ORG_SHORT_NAME="SCCQ"
-TYK_DASH_PORT="3000"
+TYK_DASH_PORT=${TYK_DASHB_LOCAL_PORT}
 
 # the path where config and secrets are stored
 # Tyk dashboard settings
-TYK_CONFIG_PATH=${CONFIG_PATH}/tyk/confs
-source ${TYK_CONFIG_PATH}/tyk_secret
 
 #set a default user
-TYK_DASHBOARD_USERNAME=$CANDIG_TYK_USERNAME
-TYK_DASHBOARD_PASSWORD=$CANDIG_TYK_PASSWORD
-TYK_ADMIN_API_PASSWORD=$(cat $TYK_CONFIG_PATH/tyk_analytics.conf  | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["admin_secret"]')
+TYK_DASHBOARD_USERNAME=${CANDIG_TYK_USERNAME}
+TYK_DASHBOARD_PASSWORD=${CANDIG_TYK_PASSWORD}
+TYK_ADMIN_API_PASSWORD=${TYK_ANALYTIC_ADMIN_SECRET}
+
 TYK_ORG_FN="Omni"
 TYK_ORG_LN="Potent"
 
 TYK_API_SECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
-sed -r 's/secret": "[a-zA-Z0-9]*"/secret": "'"$TYK_API_SECRET"'"/g'   ${TYK_CONFIG_PATH}/tyk.conf
-sed -r 's/secret": "[a-zA-Z0-9]*"/secret": "'"$TYK_API_SECRET"'"/g'   ${TYK_CONFIG_PATH}/tyk_analytics.conf
+sed -r 's/secret": "[a-zA-Z0-9]*"/secret": "'"$TYK_API_SECRET"'"/g'   ${LOCAL_TYK_CONFIG_PATH}/tyk.conf
+sed -r 's/secret": "[a-zA-Z0-9]*"/secret": "'"$TYK_API_SECRET"'"/g'   ${LOCAL_TYK_CONFIG_PATH}/tyk_analytics.conf
 
 
 #API CONFIG Source the python file like a bash one, Only vars are define,
 # make sure they are written in a BASH WAY, (no space around "=")
-source $CONFIG_PATH/ga4gh_server/config.py 2>/dev/null
-export API_NAME="Candig Api"
-export TYK_SERVER
-export KC_REALM
-export KC_CLIENT_ID
-export KC_SECRET
-export KC_SERVER
 export KC_LOGIN_REDIRECT_PATH
 export TYK_LISTEN_PATH
-export CANDIG_SERVER="http://ga4gh_server:80"
-export KC_ISSUER=${KC_SERVER}/auth/realms/${KC_REALM}
+export KC_ISSUER=${KC_PUBLIC_URL}:${KC_PUBLIC_PORT}/auth/realms/${KC_REALM}
 
-# POLICY CONFIGs
-export POLICY_NAME="Candig policy"
-
-DOM=$(echo $TYK_SERVER | cut -f1 -d:)
 
 # Tyk portal settings
-TYK_PORTAL_DOMAIN="${DOM}"
-TYK_DASH_DOMAIN="${DOM}"
 
 TYK_PORTAL_PATH="/portal/"
 
@@ -72,9 +57,9 @@ fi
 
 if [ -n "$2" ]
 then
-		TYK_PORTAL_DOMAIN=$2
+		CANDIG_PUBLIC_URL=$2
 		echo "Docker portal domain address explicitly set."
-		echo "Using $TYK_PORTAL_DOMAIN as Tyk host address."
+		echo "Using ${CANDIG_PUBLIC_URL} as Tyk host address."
 fi
 
 if [ -z "$1" ]
@@ -84,7 +69,7 @@ then
 fi
 
 echo "Creating Organisation"
-ORG_DATA=$(curl --silent --header "admin-auth: $TYK_ADMIN_API_PASSWORD" --header "Content-Type:application/json" --data '{"owner_name": "'"$TYK_ORGANOSATION"'","owner_slug": "'"$TYK_ORG_SHORT_NAME"'", "cname_enabled":true, "cname": "'"$TYK_PORTAL_DOMAIN"'"}' http://$DOCKER_IP:$TYK_DASH_PORT/admin/organisations 2>&1)
+ORG_DATA=$(curl --silent --header "admin-auth: $TYK_ADMIN_API_PASSWORD" --header "Content-Type:application/json" --data '{"owner_name": "'"$TYK_ORGANOSATION"'","owner_slug": "'"$TYK_ORG_SHORT_NAME"'", "cname_enabled":true, "cname": "'"${CANDIG_PUBLIC_URL}"'"}' http://$DOCKER_IP:$TYK_DASH_PORT/admin/organisations 2>&1)
 ORG_ID=$(echo $ORG_DATA | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["Meta"]')
 
 echo "ORG ID: $ORG_ID"
@@ -115,15 +100,16 @@ CAT_DATA=$(curl -X POST --silent --header "Authorization: $USER_AUTH" --header "
 echo ""
 
 echo "===="
-echo "Login at http://$TYK_DASH_DOMAIN:$TYK_DASH_PORT/"
+echo "Login at http://$CANDIG_PUBLIC_URL:$TYK_DASH_PORT/"
 echo "Username: $TYK_DASHBOARD_USERNAME"
 echo "Password: $TYK_DASHBOARD_PASSWORD"
-echo "Portal: http://$TYK_PORTAL_DOMAIN:$TYK_DASH_PORT$TYK_PORTAL_PATH"
+echo "Portal: http://$CANDIG_PUBLIC_URL:$TYK_DASH_PORT$TYK_PORTAL_PATH"
 echo ""
 
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-source tyk_api.sh
-source tyk_policies.sh
-source update_tyk_api.sh
+source ${SCRIPTPATH}/tyk_api.sh
+source ${SCRIPTPATH}/tyk_policies.sh
+source ${SCRIPTPATH}/update_tyk_api.sh
 
 echo "DONE"

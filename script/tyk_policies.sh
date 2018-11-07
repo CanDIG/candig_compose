@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-echo Creating policy "$POLICY_NAME" for API "$API_NAME":"$API_ID"
+echo Creating policy "$TYK_POLICY_NAME" for API "$API_NAME":"$API_ID"
 
 POL_DATA=$(curl -X POST -H "authorization: $USER_AUTH" \
   -s \
@@ -19,7 +19,7 @@ POL_DATA=$(curl -X POST -H "authorization: $USER_AUTH" \
       }
     },
     "active": true,
-    "name": "'"$POLICY_NAME"'",
+    "name": "'"$TYK_POLICY_NAME"'",
     "rate": 100,
     "per": 1,
     "quota_max": 10000,
