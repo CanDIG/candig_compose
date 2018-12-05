@@ -13,7 +13,7 @@ services:
   candig.calculquebec.ca:
     image: tykio/tyk-gateway:v2.6.2
     ports:
-    - "8080:${TYK_GATW_LOCAL_PORT}"
+    - "${TYK_GATW_LOCAL_PORT}:8080"
     networks:
     - tyk
     depends_on:
@@ -46,7 +46,8 @@ services:
   candigauth.calculquebec.ca:
     image: c3genomics/keycloak:0.4
     ports: 
-    - "8081:${KC_LOCAL_PORT}"
+    - "${KC_LOCAL_PORT}:8081"
+    - "${KC_LOCAL_PORT_SSL}:8443"
     networks:
     - tyk
   ga4gh_server:

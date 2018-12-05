@@ -56,6 +56,7 @@ export KC_PUBLIC_PORT=8081
 
 export KC_LOCAL_URL=candigauth.you_site.org
 export KC_LOCAL_PORT=8081
+export KC_LOCAL_PORT_SSL=8443
 
 
 export LOCAL_TYK_CONFIG_PATH=${OUPTUT_CONFIGURATION_DIR}/tyk/confs
