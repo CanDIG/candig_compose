@@ -33,7 +33,7 @@ while getopts "t:k:o:" opt; do
       T_HOST=$OPTARG
       ;;
     k)
-      K_PORT=$(echo $OPTARG | cut -f1 -d:)
+      K_PORT=$(echo $OPTARG | cut -f2 -d:)
       K_HOST=$(echo $OPTARG | cut -f1 -d:)
       ;;
    \?)
