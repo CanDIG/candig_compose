@@ -55,10 +55,10 @@ export TYK_DASHB_LOCAL_PORT=3000
 
 
 export KC_PUBLIC_URL=http://candigauth.you_site.org
-export KC_PUBLIC_PORT=8081
+export KC_PUBLIC_PORT=9080
 
 export KC_LOCAL_URL=candigauth.you_site.org
-export KC_LOCAL_PORT=8081
+export KC_LOCAL_PORT=9080
 export KC_LOCAL_PORT_SSL=8443
 
 
