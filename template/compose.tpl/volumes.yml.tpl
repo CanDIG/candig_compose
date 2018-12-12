@@ -10,9 +10,6 @@ services:
   tyk-pump:
     volumes:
     - ${LOCAL_TYK_CONFIG_PATH}/pump.conf:/opt/tyk-pump/pump.conf
-  candigauth.calculquebec.ca:
-    volumes:
-    - ${LOCAL_KC_CONFIG_PATH}/secrets:/opt/keycloak_conf/secrets
   ga4gh_server:
     volumes:
     - ${LOCAL_GA4GH_CONFIG_PATH}/config.py:/opt/ga4gh_server/config.py
