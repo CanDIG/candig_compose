@@ -75,4 +75,10 @@ mkdir -p ./yml/
 echo Creating the Candig compose yml 
  cat ${INPUT_TEMPLATE_DIR}/compose.tpl/volumes.yml.tpl | envsubst > ./yml/volumes.yml
  cat ${INPUT_TEMPLATE_DIR}/compose.tpl/containers_network.yml.tpl | envsubst > ./yml/containers_network.yml
-echo Done
+
+ echo KEYCLOAK_USER=${KEYCLOAK_USER} > ${OUPTUT_CONFIGURATION_DIR}/secret.env
+ echo KEYCLOAK_PASSWORD=${KEYCLOAK_PASSWORD} >> ${OUPTUT_CONFIGURATION_DIR}/secret.env
+ echo BIND_OPTS=-Djboss.socket.binding.port-offset=1000 >> ${OUPTUT_CONFIGURATION_DIR}/secret.env
+ 
+ 
+ echo Done

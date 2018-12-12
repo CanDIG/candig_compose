@@ -14,6 +14,9 @@ export SECRET_KEY=a_default_to_change_jfsaljfLKdjflKSJD
 
 export KC_ADMIN_USER=a_default_to_change_admin_per
 export KC_PW=a_default_to_change_kfjaskdihfowiehsgdv
+# to fit in the .env file
+export KEYCLOAK_USER=${KC_ADMIN_USER}
+export KEYCLOAK_PASSWORD=${KC_PW}
 
 export CANDIG_TYK_USERNAME=a_default_to_change_test_bed@mail.com
 export CANDIG_TYK_PASSWORD=a_default_to_change_my.only.bonne.idee.pour.un.good.pasword
