@@ -48,8 +48,8 @@ services:
     env_file:
     - ${OUPTUT_CONFIGURATION_DIR}/secret.env
     ports: 
-    - "${KC_LOCAL_PORT}:9080"
-    - "${KC_LOCAL_PORT_SSL}:9443"
+    - "${KC_LOCAL_PORT}:8081"
+    - "${KC_LOCAL_PORT_SSL}:443"
     networks:
     - tyk
   ga4gh_server:
