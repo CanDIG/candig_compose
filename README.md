@@ -57,5 +57,5 @@ and make it executable with `chmod 755 docker-compose`.
 
 Run the following
 ```
-./candig_setup.sh
+./candig_setup.sh -o  ~/place_not_in_git_repo/config -k keycloachost:port -t tykhost 
 ```
