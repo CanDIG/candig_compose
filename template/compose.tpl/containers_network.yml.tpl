@@ -45,7 +45,7 @@ services:
     - tyk
   candigauth.calculquebec.ca:
     image: jboss/keycloak:4.7.0.Final
-    user: root
+    user:root
     env_file:
     - ${OUPTUT_CONFIGURATION_DIR}/secret.env
     ports: 
