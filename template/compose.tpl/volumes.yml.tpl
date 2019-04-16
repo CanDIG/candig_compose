@@ -10,7 +10,7 @@ services:
   candigauth:
     volumes:
     - ${LOCAL_KC_CONFIG_PATH}/standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
-    - -  ${LOCAL_KC_CONFIG_PATH}/keycloak-add-user.json:/opt/jboss/keycloak/standalone/configuration/keycloak-add-user.json
+    -  ${LOCAL_KC_CONFIG_PATH}/keycloak-add-user.json:/opt/jboss/keycloak/standalone/configuration/keycloak-add-user.json
   tyk-pump:
     volumes:
     - ${LOCAL_TYK_CONFIG_PATH}/pump.conf:/opt/tyk-pump/pump.conf
