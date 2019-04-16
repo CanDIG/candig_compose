@@ -69,7 +69,7 @@ export LOCAL_KC_CONFIG_PATH=${OUPTUT_CONFIGURATION_DIR}/keycloak/configuration
 export LOCAL_GA4GH_CONFIG_PATH=${OUPTUT_CONFIGURATION_DIR}/ga4gh_server
 
 
-# This is the adress seen by tyk (in compose its the name)
+# Do not touch, this is the adress seen by tyk (in compose its the name)
 export LOCAL_CANDIG_SERVER="http://ga4gh_server:80"
 
 ############################

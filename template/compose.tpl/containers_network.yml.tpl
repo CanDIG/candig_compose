@@ -47,9 +47,7 @@ services:
     image: jboss/keycloak:4.7.0.Final
     user: root
     env_file:
-    - ${OUPTUT_CONFIGURATION_DIR}/secret.env
-    ports: 
-    - "${KC_LOCAL_PORT}:80"
+    - ${LOCAL_KC_CONFIG_PATH}/secret.env
     networks:
     - tyk
   ga4gh_server:
