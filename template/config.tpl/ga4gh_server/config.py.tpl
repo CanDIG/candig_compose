@@ -13,7 +13,7 @@ TYK_LISTEN_PATH="${TY_LISTEN_PATH}"
 
 # Keycloak settings with redirection through tyk
 KC_REALM='candig'
-KC_SERVER="${KC_PUBLIC_URL}:${KC_PUB_PORT}"
+KC_SERVER="${KC_PUBLIC_URL}${KC_PUB_PORT}"
 KC_SCOPE='openid+email'
 KC_RTYPE='code'
 KC_CLIENT_ID='cq_candig'
