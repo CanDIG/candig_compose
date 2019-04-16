@@ -47,7 +47,7 @@ services:
     image: jboss/keycloak:4.7.0.Final
     user: root
     env_file:
-    - ${LOCAL_KC_CONFIG_PATH}/secret.env
+    - ${LOCAL_KC_CONFIG_PATH}/secrets.env
     networks:
     - tyk
   ga4gh_server:
