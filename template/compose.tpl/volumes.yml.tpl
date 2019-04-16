@@ -3,11 +3,11 @@ services:
   tyk-dashboard:
     volumes:
     - ${LOCAL_TYK_CONFIG_PATH}/tyk_analytics.conf:/opt/tyk-dashboard/tyk_analytics.conf
-  candig.calculquebec.ca:
+  candig:
     volumes:
     - ${LOCAL_TYK_CONFIG_PATH}/authMiddleware.js:/opt/tyk-gateway/middleware/authMiddleware.js
     - ${LOCAL_TYK_CONFIG_PATH}/tyk.conf:/opt/tyk-gateway/tyk.conf
-  candigauth.calculquebec.ca:
+  candigauth:
     volumes:
     - ${LOCAL_KC_CONFIG_PATH}/standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
   tyk-pump:
