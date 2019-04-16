@@ -166,11 +166,11 @@ VAR='{
   },
   "use_oauth2": false,
   "config_data": {
-    "tyk_host": "'"${CANDIG_PUBLIC_URL}:${CANDIG_PUBLIC_PORT}"'",
+    "tyk_host": "'"${CANDIG_PUBLIC_URL}${CD_PUB_PORT}"'",
     "keycloak_realm": "'"${KC_REALM}"'",
     "keycloak_client": "'"${KC_CLIENT_ID}"'",
     "tyk_listen": "'"${TYK_LISTEN_PATH}"'",
-    "keycloak_host": "'"${KC_PUBLIC_URL}:${KC_PUBLIC_PORT}"'",
+    "keycloak_host": "'"${KC_PUBLIC_URL}${KC_PUB_PORT}"'",
     "keycloak_secret": "'"${KC_SECRET}"'"
   },
   "openid_options": {

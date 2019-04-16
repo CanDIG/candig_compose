@@ -103,7 +103,7 @@ redirect=$4
   "standardFlowEnabled": true,
   "publicClient": false,
   "redirectUris": [
-   "'${CANDIG_PUBLIC_URL}:${CANDIG_PUBLIC_PORT}${listen}${redirect}'"
+   "'${CANDIG_PUBLIC_URL}${CD_PUB_PORT}${listen}${redirect}'"
    ],
   "attributes": {
     "saml.assertion.signature": "false",

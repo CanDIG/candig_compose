@@ -32,7 +32,7 @@ sed -r 's/secret": "[a-zA-Z0-9]*"/secret": "'"$TYK_API_SECRET"'"/g'   ${LOCAL_TY
 # make sure they are written in a BASH WAY, (no space around "=")
 export KC_LOGIN_REDIRECT_PATH
 export TYK_LISTEN_PATH
-export KC_ISSUER=${KC_PUBLIC_URL}:${KC_PUBLIC_PORT}/auth/realms/${KC_REALM}
+export KC_ISSUER=${KC_PUBLIC_URL}${KC_PUB_PORT}/auth/realms/${KC_REALM}
 
 
 # Tyk portal settings
@@ -100,10 +100,9 @@ CAT_DATA=$(curl -X POST --silent --header "Authorization: $USER_AUTH" --header "
 echo ""
 
 echo "===="
-echo "Login at http://$CANDIG_PUBLIC_URL:$TYK_DASH_PORT/"
+echo Tyk Dashboard
 echo "Username: $TYK_DASHBOARD_USERNAME"
 echo "Password: $TYK_DASHBOARD_PASSWORD"
-echo "Portal: http://$CANDIG_PUBLIC_URL:$TYK_DASH_PORT$TYK_PORTAL_PATH"
 echo ""
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"

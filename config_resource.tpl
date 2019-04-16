@@ -9,7 +9,7 @@
 export OUPTUT_CONFIGURATION_DIR=/tmp/candig_conf
 
 
-## Change the
+## Change the password
 export SECRET_KEY=a_default_to_change_jfsaljfLKdjflKSJD
 
 export KC_ADMIN_USER=a_default_to_change_admin_per
@@ -29,6 +29,8 @@ export TYK_ANALYTIC_ADMIN_SECRET=a_default_to_change_oweuifhnsEWFSiwhqetutbsvbdf
 # Get this lic from TYK here https://tyk.io/product/tyk-on-premises-free-edition/
 export ANALYTIC_LIC_KEY=""
 
+# True if the keycoak is behind a proxy, typically nginx or apache.
+PROXY_ADDRESS_FORWARDING=true
 
 
 ###############################################
@@ -87,4 +89,10 @@ export KC_LOGIN_REDIRECT_PATH='/login_oidc'
 export API_NAME="Candig Api"
 
 
-
+# some porte cleaning and reordering, Do not edit default http and https are wiped out!
+CD_PUB_PORT=:${CANDIG_PUBLIC_PORT}
+CD_PUB_PORT=${CD_PUB_PORT%:80}
+export CD_PUB_PORT=${CD_PUB_PORT%:443}
+KC_PUB_PORT=:${KC_PUBLIC_PORT}
+KC_PUB_PORT=${KC_PUB_PORT%:80}
+export KC_PUB_PORT=${KC_PUB_PORT%:443}
