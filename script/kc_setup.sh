@@ -2,9 +2,23 @@
 
 usage () {
 
-  echo "${0} [<keycloak host> <keycloak api port>]"
-
+  echo "${0} [-a]  [<keycloak host> <keycloak api port>]"
+  echo "     -a    adds user  ${KC_TEST_USER} in realm ${KC_REALM}"
 }
+
+
+while getopts "a" opt; do
+  case $opt in
+    a)  
+      ADD_USER=true
+      ;;  
+   \?) 
+      usage
+      exit 1
+      ;;  
+  esac
+done
+
 
 
 if [[ $# -eq 1 ]]; then
@@ -33,6 +47,16 @@ valid_json () {
      echo JSON is not valid
      exit $ret_val
   fi
+
+}
+
+###############
+
+add_user() {
+  # do not hardcode candigauth...
+
+docker exec candigauth keycloak/bin/add-user-keycloak.sh -u ${KC_TEST_USER} -p ${KC_TEST_USER_PW} -r ${KC_REALM}
+docker restart yml_candigauth_1
 
 }
 
@@ -152,3 +176,8 @@ set_client ${KC_REALM} ${KC_CLIENT_ID} "${TYK_LISTEN_PATH}" ${KC_LOGIN_REDIRECT_
 
 echo getting kc client secret
 export KC_SECRET=$(get_secret)
+
+if $ADD_USER ; then
+  add_user 
+fi
+

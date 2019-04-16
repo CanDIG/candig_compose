@@ -12,11 +12,16 @@ export OUPTUT_CONFIGURATION_DIR=/tmp/candig_conf
 ## Change the password
 export SECRET_KEY=a_default_to_change_jfsaljfLKdjflKSJD
 
+# a user that will have access to the test data
+export KC_TEST_USER=a_user
+export KC_TEST_USER_PW=a_password
+
 export KC_ADMIN_USER=a_default_to_change_admin_per
 export KC_PW=a_default_to_change_kfjaskdihfowiehsgdv
 # to fit in the .env file
 export KEYCLOAK_USER=${KC_ADMIN_USER}
 export KEYCLOAK_PASSWORD=${KC_PW}
+
 
 export CANDIG_TYK_USERNAME=a_default_to_change_test_bed@mail.com
 export CANDIG_TYK_PASSWORD=a_default_to_change_my.only.bonne.idee.pour.un.good.pasword
@@ -36,7 +41,6 @@ PROXY_ADDRESS_FORWARDING=true
 ###############################################
 # Local address is th one seen when running the setup
 # Public address resolve in the public dns
-
 
 
 # True for https False for http

@@ -65,8 +65,7 @@ find ${INPUT_TEMPLATE_DIR}/config.tpl -type f -name '*.tpl' -print0 |
 
     done
 
-touch ${LOCAL_GA4GH_CONFIG_PATH}/access_list.txt
-
+echo "${KC_TEST_USER}:clinical_metadata_tier:4" > ${LOCAL_GA4GH_CONFIG_PATH}/access_list.txt
 
 echo Done
 
