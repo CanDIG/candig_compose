@@ -10,7 +10,7 @@ services:
     depends_on:
     - tyk-redis
     - tyk-mongo
-  candig.calculquebec.ca:
+  candig:
     image: tykio/tyk-gateway:v2.6.2
     ports:
     - "${TYK_GATW_LOCAL_PORT}:8080"
@@ -25,7 +25,7 @@ services:
     depends_on:
     - tyk-redis
     - tyk-mongo
-    - candig.calculquebec.ca
+    - candig
   tyk-redis:
     image: redis:4.0.11-stretch
     ports:
@@ -43,20 +43,17 @@ services:
     - mongo-data:/data/db
     networks:
     - tyk
-  candigauth.calculquebec.ca:
+  candigauth:
     image: jboss/keycloak:4.7.0.Final
-    user:root
+    user: root
     env_file:
     - ${OUPTUT_CONFIGURATION_DIR}/secret.env
     ports: 
-    - "${KC_LOCAL_PORT}:8081"
-    - "${KC_LOCAL_PORT_SSL}:443"
+    - "${KC_LOCAL_PORT}:80"
     networks:
     - tyk
   ga4gh_server:
     image: c3genomics/ga4gh_server:0.6
-    ports:
-    - "80:80"
     networks:
     - tyk
 
