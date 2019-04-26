@@ -1,7 +1,10 @@
 ## Configure the Candig server in a couple of steps!
 
+For it to work without too much reconfiguration port 3000, 8081 and 8080
+should be available on the machine where the CanDig containers are deployed.
+
 ### Deploy on a local host
-1- Fill you config_resourcesfile
+1- Fill you config_resources file
 
 `config_resource.tpl` is a template of a config file. It will contain the
 configuration of your candig deployement but also password, keys and username
@@ -14,7 +17,6 @@ cp config_resource.tpl ~/place_not_in_git_repo/config
 and edit the file there!
 
 2- Create your compose files.
-
 
 ```
 create_compose.sh -o ~/place_not_in_git_repo/config
@@ -48,7 +50,8 @@ docker-compose -f ylm/containers_network.yml -f `yml/volumes.yml logs -f
 
 If compose is not available on you machine you can download its binary here
 ```
-wget -O docker-compose  "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)")
+wget -O docker-compose \
+ "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)")
 ```
 and make it executable with `chmod 755 docker-compose`.
 
@@ -57,5 +60,6 @@ and make it executable with `chmod 755 docker-compose`.
 
 Run the following
 ```
-./candig_setup.sh -o  ~/place_not_in_git_repo/config -k keycloachost:port -t tykhost 
+./candig_setup.sh \
+-o  ~/place_not_in_git_repo/config -k keycloachost:8081 -t tykhost
 ```

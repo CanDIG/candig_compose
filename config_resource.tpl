@@ -2,44 +2,47 @@
 # Source it form there before executing the setups
 
 
-# Where you what the output to be stored
-# it is where they will be looked for by the candig_setup.sh too
-# need to be RW by the user who execute the setup.sh step
-# This folder will need to be mounted ont the compose host
+# Directory to store the configuration
 export OUPTUT_CONFIGURATION_DIR=/tmp/candig_conf
-
 
 ## Change the password
 export SECRET_KEY=a_default_to_change_jfsaljfLKdjflKSJD
 
-# a user that will have access to the test data
+# You will be able to log this user and have acces to a test dataset
 export KC_TEST_USER=a_user
 export KC_TEST_USER_PW=a_password
 
+# Keycloak admin
 export KC_ADMIN_USER=a_default_to_change_admin_per
 export KC_PW=a_default_to_change_kfjaskdihfowiehsgdv
-# to fit in the .env file
-export KEYCLOAK_USER=${KC_ADMIN_USER}
-export KEYCLOAK_PASSWORD=${KC_PW}
 
-
+#Tyk admin 
 export CANDIG_TYK_USERNAME=a_default_to_change_test_bed@mail.com
 export CANDIG_TYK_PASSWORD=a_default_to_change_my.only.bonne.idee.pour.un.good.pasword
-
 export TYK_DASH_FROM_EMAIL="maybe_you@my_mail.com"
-export TYK_DASH_FROM_NAME="you name"
+export TYK_DASH_FROM_NAME="your name"
 
-export TYK_NODE_SECRET=a_default_to_change_0rwejfkzp09uenjkfcspcajl
-export TYK_ANALYTIC_ADMIN_SECRET=a_default_to_change_oweuifhnsEWFSiwhqetutbsvbdf
 # Get this lic from TYK here https://tyk.io/product/tyk-on-premises-free-edition/
 export ANALYTIC_LIC_KEY=""
+export TYK_NODE_SECRET=a_default_to_change_0rwejfkzp09uenjkfcspcajl
+export TYK_ANALYTIC_ADMIN_SECRET=a_default_to_change_oweuifhnsEWFSiwhqetutbsvbdf
 
-# True if the keycoak is behind a proxy, typically nginx or apache.
-PROXY_ADDRESS_FORWARDING=true
+
+# typically the ports will be 443 and 443 for https adresses
+export CANDIG_PUBLIC_URL=http://candig.you_site.org
+export CANDIG_PUBLIC_PORT=8080
+export KC_PUBLIC_URL=http://candigauth.you_site.org
+export KC_PUBLIC_PORT=8081
+
+# true if the keycoak is behind a TLS encrypted proxy, typically nginx or apache.
+# false if there is no encryption
+PROXY_ADDRESS_FORWARDING=false
 
 
-###############################################
-# Local address is th one seen when running the setup
+
+# You should not have to not touch what is bellow 
+##################################################
+# Local address this one seen when running the setup
 # Public address resolve in the public dns
 
 
@@ -50,20 +53,12 @@ export SESSION_COOKIE_SECURE=False
 # put the full path id you intend to run the setup from somehere remote folder 
 export INPUT_TEMPLATE_DIR=${PWD}/template
 
-export CANDIG_PUBLIC_URL=http://candig.you_site.org
-export CANDIG_PUBLIC_PORT=8080
 
 export TYK_GATW_LOCAL_URL=candig.you_site.org
 export TYK_GATW_LOCAL_PORT=8080
 
-export TYK_DASHB_LOCAL_URL=candig.you_site.org
-export TYK_DASHB_LOCAL_PORT=3000
 
 
-export KC_PUBLIC_URL=http://candigauth.you_site.org
-export KC_PUBLIC_PORT=8081
-
-export KC_LOCAL_URL=candigauth.you_site.org
 export KC_LOCAL_PORT=8081
 export KC_LOCAL_PORT_SSL=443
 
@@ -100,3 +95,7 @@ export CD_PUB_PORT=${CD_PUB_PORT%:443}
 KC_PUB_PORT=:${KC_PUBLIC_PORT}
 KC_PUB_PORT=${KC_PUB_PORT%:80}
 export KC_PUB_PORT=${KC_PUB_PORT%:443}
+
+# to fit in the .env file
+export KEYCLOAK_USER=${KC_ADMIN_USER}
+export KEYCLOAK_PASSWORD=${KC_PW}
