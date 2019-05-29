@@ -16,7 +16,7 @@ export KC_TEST_USER_PW=a_password
 export KC_ADMIN_USER=a_default_to_change_admin_per
 export KC_PW=a_default_to_change_kfjaskdihfowiehsgdv
 
-#Tyk admin 
+#Tyk admin
 export CANDIG_TYK_USERNAME=a_default_to_change_test_bed@mail.com
 export CANDIG_TYK_PASSWORD=a_default_to_change_my.only.bonne.idee.pour.un.good.pasword
 export TYK_DASH_FROM_EMAIL="maybe_you@my_mail.com"
@@ -40,7 +40,7 @@ PROXY_ADDRESS_FORWARDING=false
 
 
 
-# You should not have to not touch what is bellow 
+# You should not have to not touch what is bellow
 ##################################################
 # Local address this one seen when running the setup
 # Public address resolve in the public dns
@@ -49,12 +49,13 @@ PROXY_ADDRESS_FORWARDING=false
 # True for https False for http
 export SESSION_COOKIE_SECURE=False
 
-#The full path of the template/ dir in this repo! 
-# put the full path id you intend to run the setup from somehere remote folder 
+#The full path of the template/ dir in this repo!
+# put the full path id you intend to run the setup from somehere remote folder
 export INPUT_TEMPLATE_DIR=${PWD}/template
 
 
 export TYK_GATW_LOCAL_URL=candig.you_site.org
+# the local port number for tyk this cannot be change at this time
 export TYK_GATW_LOCAL_PORT=8080
 
 
@@ -75,7 +76,6 @@ export LOCAL_CANDIG_SERVER="http://ga4gh_server:80"
 
 # listen_path is empty "", put a slash only if there is a path "/<path>"
 export TYK_LISTEN_PATH=""
-
 export TYK_POLICY_NAME="Candig policy"
 
 
@@ -86,16 +86,3 @@ export KC_CLIENT_ID='cq_candig'
 export KC_LOGIN_REDIRECT_PATH='/login_oidc'
 
 export API_NAME="Candig Api"
-
-
-# some porte cleaning and reordering, Do not edit default http and https are wiped out!
-CD_PUB_PORT=:${CANDIG_PUBLIC_PORT}
-CD_PUB_PORT=${CD_PUB_PORT%:80}
-export CD_PUB_PORT=${CD_PUB_PORT%:443}
-KC_PUB_PORT=:${KC_PUBLIC_PORT}
-KC_PUB_PORT=${KC_PUB_PORT%:80}
-export KC_PUB_PORT=${KC_PUB_PORT%:443}
-
-# to fit in the .env file
-export KEYCLOAK_USER=${KC_ADMIN_USER}
-export KEYCLOAK_PASSWORD=${KC_PW}

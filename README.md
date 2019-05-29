@@ -38,13 +38,13 @@ file.
 Run:
 
 ```
-docker-compose -f ylm/containers_network.yml -f `yml/volumes.yml up -d
+docker-compose -f ylm/containers_network.yml -f yml/volumes.yml up -d
 ```
 
 you can check to log to make sure that all is well:
 
 ```
-docker-compose -f ylm/containers_network.yml -f `yml/volumes.yml logs -f
+docker-compose -f ylm/containers_network.yml -f yml/volumes.yml logs -f
 
 ```
 

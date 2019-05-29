@@ -1,7 +1,7 @@
 {
   "listen_port": 3000,
   "tyk_api_config": {
-    "Host": "http://candig.calculquebec.ca",
+    "Host": "${CANDIG_PUBLIC_URL}",
     "Port": "8080",
     "Secret": "${TYK_NODE_SECRET}"
   },

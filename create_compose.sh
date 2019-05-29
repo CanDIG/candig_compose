@@ -41,6 +41,20 @@ source ${CONFIG_FILE}
 # export all config file variables
 # the sed remove comments
 
+# admin to put in the .env file
+export KEYCLOAK_USER=${KC_ADMIN_USER}
+export KEYCLOAK_PASSWORD=${KC_PW}
+
+# Some port cleaning and reordering, 
+# remove default port from http and https
+CD_PUB_PORT=:${CANDIG_PUBLIC_PORT}
+CD_PUB_PORT=${CD_PUB_PORT%:80}
+export CD_PUB_PORT=${CD_PUB_PORT%:443}
+KC_PUB_PORT=:${KC_PUBLIC_PORT}
+KC_PUB_PORT=${KC_PUB_PORT%:80}
+export KC_PUB_PORT=${KC_PUB_PORT%:443}
+
+
 CANDIG_HOST_NAME="${CANDIG_PUBLIC_URL#http://}"
 export CANDIG_HOST_NAME="${CANDIG_HOST_NAME=#https://}"
 

@@ -6,21 +6,22 @@ usage () {
   echo "     -a    adds user  ${KC_TEST_USER} in realm ${KC_REALM}"
 }
 
-
+unset KC_ADD_USER
 while getopts "a" opt; do
   case $opt in
-    a)  
-      ADD_USER=true
-      ;;  
-   \?) 
+    a)
+      KC_ADD_USER=true
+      ;;
+   \?)
       usage
       exit 1
-      ;;  
+      ;;
   esac
 done
 
-
-
+shift $((OPTIND -1))
+echo $#
+echo $1
 if [[ $# -eq 1 ]]; then
    usage
    exit 1
@@ -53,10 +54,11 @@ valid_json () {
 ###############
 
 add_user() {
-  # do not hardcode candigauth...
 
-docker exec candigauth keycloak/bin/add-user-keycloak.sh -u ${KC_TEST_USER} -p ${KC_TEST_USER_PW} -r ${KC_REALM}
-docker restart yml_candigauth_1
+# candigauth is the name of the keycloak server inside the compose network 
+CONT_ID=$(docker ps  | grep candigauth | cut -d " " -f1)
+docker exec ${CONT_ID} keycloak/bin/add-user-keycloak.sh -u ${KC_TEST_USER} -p ${KC_TEST_USER_PW} -r ${KC_REALM}
+docker restart ${CONT_ID}
 
 }
 
@@ -178,6 +180,5 @@ echo getting kc client secret
 export KC_SECRET=$(get_secret)
 
 if $ADD_USER ; then
-  add_user 
+  add_user
 fi
-
