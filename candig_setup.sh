@@ -55,7 +55,7 @@ fi
 
 source  ${CONFIG_FILE}
 
-# Some port cleaning and reordering, 
+# Some port cleaning and reordering,
 # remove default port from http and https
 CD_PUB_PORT=:${CANDIG_PUBLIC_PORT}
 CD_PUB_PORT=${CD_PUB_PORT%:80}

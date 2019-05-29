@@ -22,6 +22,7 @@ done
 shift $((OPTIND -1))
 echo $#
 echo $1
+echo $2
 if [[ $# -eq 1 ]]; then
    usage
    exit 1
@@ -55,7 +56,7 @@ valid_json () {
 
 add_user() {
 
-# candigauth is the name of the keycloak server inside the compose network 
+# candigauth is the name of the keycloak server inside the compose network
 CONT_ID=$(docker ps  | grep candigauth | cut -d " " -f1)
 docker exec ${CONT_ID} keycloak/bin/add-user-keycloak.sh -u ${KC_TEST_USER} -p ${KC_TEST_USER_PW} -r ${KC_REALM}
 docker restart ${CONT_ID}

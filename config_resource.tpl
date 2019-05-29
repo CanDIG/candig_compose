@@ -34,17 +34,9 @@ export CANDIG_PUBLIC_PORT=8080
 export KC_PUBLIC_URL=http://candigauth.you_site.org
 export KC_PUBLIC_PORT=8081
 
-# true if the keycoak is behind a TLS encrypted proxy, typically nginx or apache.
-# false if there is no encryption
-PROXY_ADDRESS_FORWARDING=false
-
-
-
-# You should not have to not touch what is bellow
-##################################################
-# Local address this one seen when running the setup
-# Public address resolve in the public dns
-
+# true if the keycoak is behind a TLS encrypted proxy,
+# typically nginx or apache. false otherwise
+export PROXY_ADDRESS_FORWARDING=false
 
 # True for https False for http
 export SESSION_COOKIE_SECURE=False
