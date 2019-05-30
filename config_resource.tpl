@@ -16,6 +16,8 @@ export KC_TEST_USER_PW=a_password
 export KC_ADMIN_USER=a_default_to_change_admin_per
 export KC_PW=a_default_to_change_kfjaskdihfowiehsgdv
 
+
+
 #Tyk admin
 export CANDIG_TYK_USERNAME=a_default_to_change_test_bed@mail.com
 export CANDIG_TYK_PASSWORD=a_default_to_change_my.only.bonne.idee.pour.un.good.pasword
@@ -78,3 +80,6 @@ export KC_CLIENT_ID='cq_candig'
 export KC_LOGIN_REDIRECT_PATH='/login_oidc'
 
 export API_NAME="Candig Api"
+
+# do not change
+export TYK_DASHB_LOCAL_PORT=3000
