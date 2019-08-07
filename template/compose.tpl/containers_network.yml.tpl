@@ -51,8 +51,8 @@ services:
     - ${LOCAL_KC_CONFIG_PATH}/secrets.env
     networks:
     - tyk
-  ga4gh_server:
-    image: c3genomics/ga4gh_server:0.6
+  candig_server:
+    image: c3genomics/candig_server
     networks:
     - tyk
 
