@@ -16,4 +16,4 @@ services:
   candig_server:
     volumes:
     - ${LOCAL_CANDIG_CONFIG_PATH}/config.py:/opt/candig_server/config.py
-    - ${LOCAL_CANDIG_CONFIG_PATH}/access_list.txt:/data/access_list.txt
+    - ${LOCAL_CANDIG_CONFIG_PATH}/access_list.tsv:/data/access_list.tsv

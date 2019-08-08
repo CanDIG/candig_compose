@@ -1,9 +1,8 @@
 DATA_SOURCE='/data/candig-example-data/registry.db'
 REQUEST_VALIDATION=True
-INITIAL_PEERS='/data/server/templates/initial_peers.txt'
 SESSION_COOKIE_SECURE=${SESSION_COOKIE_SECURE}
 SECRET_KEY='${SECRET_KEY}'
-ACCESS_LIST='/data/access_list.txt'
+ACCESS_LIST='/data/access_list.tsv'
 
 # Tyk settings 
 TYK_ENABLED=True

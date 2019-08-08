@@ -53,6 +53,17 @@ services:
     - tyk
   candig_server:
     image: c3genomics/candig_server
+    entrypoint:
+    - candig_server
+    - --host
+    - "0.0.0.0"
+    - --port
+    - "80"
+    - --workers
+    - "1"
+    - --gunicorn
+    - -f
+    - /opt/candig_server/config.py
     networks:
     - tyk
 
