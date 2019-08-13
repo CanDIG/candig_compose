@@ -79,7 +79,9 @@ find ${INPUT_TEMPLATE_DIR}/config.tpl -type f -name '*.tpl' -print0 |
 
     done
 mkdir -p ${LOCAL_CANDIG_CONFIG_PATH}
-echo "${KC_TEST_USER}:clinical_metadata_tier:4" > ${LOCAL_CANDIG_CONFIG_PATH}/access_list.tsv
+echo -e "issuer\tusername\tmock_data" > ${LOCAL_CANDIG_CONFIG_PATH}/access_list.tsv
+echo -e "${KC_PUBLIC_URL}${KC_PUB_PORT}/auth/realms/${KC_REALM}\t${KC_TEST_USER}\t4" \
+   >> ${LOCAL_CANDIG_CONFIG_PATH}/access_list.tsv
 
 echo Done
 
