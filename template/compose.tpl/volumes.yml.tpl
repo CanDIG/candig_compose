@@ -13,7 +13,7 @@ services:
   tyk-pump:
     volumes:
     - ${LOCAL_TYK_CONFIG_PATH}/pump.conf:/opt/tyk-pump/pump.conf
-  ga4gh_server:
+  candig_server:
     volumes:
-    - ${LOCAL_GA4GH_CONFIG_PATH}/config.py:/opt/ga4gh_server/config.py
-    - ${LOCAL_GA4GH_CONFIG_PATH}/access_list.txt:/usr/lib/python2.7/site-packages/ga4gh/access_list.txt
+    - ${LOCAL_CANDIG_CONFIG_PATH}/config.py:/opt/candig_server/config.py
+    - ${LOCAL_CANDIG_CONFIG_PATH}/access_list.tsv:/data/access_list.tsv

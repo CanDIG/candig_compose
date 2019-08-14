@@ -60,11 +60,11 @@ export KC_LOCAL_PORT_SSL=443
 
 export LOCAL_TYK_CONFIG_PATH=${OUPTUT_CONFIGURATION_DIR}/tyk/confs
 export LOCAL_KC_CONFIG_PATH=${OUPTUT_CONFIGURATION_DIR}/keycloak/configuration
-export LOCAL_GA4GH_CONFIG_PATH=${OUPTUT_CONFIGURATION_DIR}/ga4gh_server
+export LOCAL_CANDIG_CONFIG_PATH=${OUPTUT_CONFIGURATION_DIR}/candig_server
 
 
 # Do not touch, this is the adress seen by tyk (in compose its the name)
-export LOCAL_CANDIG_SERVER="http://ga4gh_server:80"
+export LOCAL_CANDIG_SERVER="http://candig_server:80"
 
 ############################
 

@@ -51,8 +51,19 @@ services:
     - ${LOCAL_KC_CONFIG_PATH}/secrets.env
     networks:
     - tyk
-  ga4gh_server:
-    image: c3genomics/ga4gh_server:0.6
+  candig_server:
+    image: c3genomics/candig_server
+    entrypoint:
+    - candig_server
+    - --host
+    - "0.0.0.0"
+    - --port
+    - "80"
+    - --workers
+    - "1"
+    - --gunicorn
+    - -f
+    - /opt/candig_server/config.py
     networks:
     - tyk
 
