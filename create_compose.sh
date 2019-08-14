@@ -4,12 +4,12 @@
 
 usage (){
 
-echo 
+echo
 echo "usage: $0 -o <config_file>"
-echo 
+echo
 echo "   -o        default is ./config_resource."
 echo "              To be created with the help of config_resource.tpl"
- 
+
 }
 
 
@@ -20,7 +20,7 @@ CONFIG_FILE=./config_resource
 while getopts "o:" opt; do
   case $opt in
     o)
-      CONFIG_FILE=$OPTARG  
+      CONFIG_FILE=$OPTARG
       ;;
    \?)
       usage
@@ -41,6 +41,20 @@ source ${CONFIG_FILE}
 # export all config file variables
 # the sed remove comments
 
+# admin to put in the .env file
+export KEYCLOAK_USER=${KC_ADMIN_USER}
+export KEYCLOAK_PASSWORD=${KC_PW}
+
+# Some port cleaning and reordering,
+# remove default port from http and https
+CD_PUB_PORT=:${CANDIG_PUBLIC_PORT}
+CD_PUB_PORT=${CD_PUB_PORT%:80}
+export CD_PUB_PORT=${CD_PUB_PORT%:443}
+KC_PUB_PORT=:${KC_PUBLIC_PORT}
+KC_PUB_PORT=${KC_PUB_PORT%:80}
+export KC_PUB_PORT=${KC_PUB_PORT%:443}
+
+
 CANDIG_HOST_NAME="${CANDIG_PUBLIC_URL#http://}"
 export CANDIG_HOST_NAME="${CANDIG_HOST_NAME=#https://}"
 
@@ -53,15 +67,15 @@ mkdir -p ${OUPTUT_CONFIGURATION_DIR}
 
 cp -r ${INPUT_TEMPLATE_DIR}/config.tpl/*  ${OUPTUT_CONFIGURATION_DIR}
 
-echo Creating the Candig config files 
+echo Creating the Candig config files
 find ${INPUT_TEMPLATE_DIR}/config.tpl -type f -name '*.tpl' -print0 |
     while IFS= read -r -d $'\0' line; do
 
         output=${line#${INPUT_TEMPLATE_DIR}/config.tpl/}
         output=${output%.tpl}
-        
+
        cat $line | envsubst > ${OUPTUT_CONFIGURATION_DIR}/${output}
-       
+
 
     done
 
@@ -71,12 +85,9 @@ echo Done
 
 mkdir -p ./yml/
 
-echo Creating the Candig compose yml 
+echo Creating the Candig compose yml
  cat ${INPUT_TEMPLATE_DIR}/compose.tpl/volumes.yml.tpl | envsubst > ./yml/volumes.yml
  cat ${INPUT_TEMPLATE_DIR}/compose.tpl/containers_network.yml.tpl | envsubst > ./yml/containers_network.yml
+ 
 
- echo KEYCLOAK_USER=${KEYCLOAK_USER} > ${OUPTUT_CONFIGURATION_DIR}/secret.env
- echo KEYCLOAK_PASSWORD=${KEYCLOAK_PASSWORD} >> ${OUPTUT_CONFIGURATION_DIR}/secret.env
- 
- 
  echo Done

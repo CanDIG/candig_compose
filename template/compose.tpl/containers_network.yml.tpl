@@ -45,9 +45,8 @@ services:
     - tyk
   candigauth:
     image: jboss/keycloak:4.7.0.Final
-    user: root
     ports:
-    - "${KC_LOCAL_PORT}:80"
+    - "${KC_LOCAL_PORT}:8081"
     env_file:
     - ${LOCAL_KC_CONFIG_PATH}/secrets.env
     networks:

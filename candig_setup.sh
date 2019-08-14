@@ -12,7 +12,7 @@ echo "   -k hostname:port"
 echo "         Keycloak host name or ip and port from where the script is"
 echo "         executed"
 echo "   -t hostname"
-echo "         Tyk host name or ip"
+echo "         Tyk host name or ip, you cannot pick port number it is fixed to 8080"
 }
 
 
@@ -54,5 +54,15 @@ fi
 
 
 source  ${CONFIG_FILE}
-source ./script/kc_setup.sh $K_HOST $K_PORT
+
+# Some port cleaning and reordering,
+# remove default port from http and https
+CD_PUB_PORT=:${CANDIG_PUBLIC_PORT}
+CD_PUB_PORT=${CD_PUB_PORT%:80}
+export CD_PUB_PORT=${CD_PUB_PORT%:443}
+KC_PUB_PORT=:${KC_PUBLIC_PORT}
+KC_PUB_PORT=${KC_PUB_PORT%:80}
+export KC_PUB_PORT=${KC_PUB_PORT%:443}
+
+source ./script/kc_setup.sh -a  $K_HOST $K_PORT
 ./script/tyk_setup.sh $T_HOST
