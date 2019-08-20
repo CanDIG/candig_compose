@@ -5,7 +5,7 @@ usage () {
   echo "${0} [-a]  [<keycloak host> <keycloak api port>]"
   echo "     -a    adds user  ${KC_TEST_USER} in realm ${KC_REALM}"
 }
-
+OPTIND=1
 unset KC_ADD_USER
 while getopts "a" opt; do
   case $opt in
