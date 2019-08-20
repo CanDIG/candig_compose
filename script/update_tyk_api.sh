@@ -43,7 +43,15 @@ up='{
 
 
 
-API_NEW=$(echo $API_DEF __TOTO__ $up | python -c 'import json,sys;l=sys.stdin.read().split("__TOTO__"); d=json.loads(l[0]); d.update(json.loads(l[1]));nd={"api_definition": d} ; print json.dumps(nd)')
+API_NEW=$(echo $API_DEF __TOTO__ $up \
+| python3 -c \
+"import json,sys;
+l=sys.stdin.read().split('__TOTO__');d=json.loads(l[0]);
+d.update(json.loads(l[1]));
+nd={'api_definition': d} ;
+print(json.dumps(nd))"
+)
 
-curl  -X PUT   -H "Content-Type: application/json" -d  "${API_NEW}"  -H "authorization: $USER_AUTH" http://$DOCKER_IP:$TYK_DASH_PORT/api/apis/$API_DB_ID
+curl  -X PUT   -H "Content-Type: application/json" -d  "${API_NEW}"  \
+-H "authorization: $USER_AUTH" http://$DOCKER_IP:$TYK_DASH_PORT/api/apis/$API_DB_ID
 echo

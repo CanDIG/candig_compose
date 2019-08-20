@@ -70,15 +70,15 @@ fi
 
 echo "Creating Organisation"
 ORG_DATA=$(curl --silent --header "admin-auth: $TYK_ADMIN_API_PASSWORD" --header "Content-Type:application/json" --data '{"owner_name": "'"$TYK_ORGANOSATION"'","owner_slug": "'"$TYK_ORG_SHORT_NAME"'", "cname_enabled":true, "cname": "'"${CANDIG_PUBLIC_URL}"'"}' http://$DOCKER_IP:$TYK_DASH_PORT/admin/organisations 2>&1)
-ORG_ID=$(echo $ORG_DATA | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["Meta"]')
+ORG_ID=$(echo $ORG_DATA | python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["Meta"])')
 
 echo "ORG ID: $ORG_ID"
 
 echo "Adding new user"
 USER_DATA=$(curl --silent --header "admin-auth: $TYK_ADMIN_API_PASSWORD" --header "Content-Type:application/json" --data '{"first_name": "'$TYK_ORG_FN'","last_name": "'$TYK_ORG_LN'","email_address": "'$TYK_DASHBOARD_USERNAME'","active": true,"org_id": "'$ORG_ID'"}' http://$DOCKER_IP:$TYK_DASH_PORT/admin/users 2>&1)
-USER_AUTH=$(echo $USER_DATA | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["Message"]')
+USER_AUTH=$(echo $USER_DATA | python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["Message"])')
 USER_LIST=$(curl --silent --header "authorization: $USER_AUTH" http://$DOCKER_IP:$TYK_DASH_PORT/api/users 2>&1)
-USER_ID=$(echo $USER_LIST | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["users"][0]["id"]')
+USER_ID=$(echo $USER_LIST | python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["users"][0]["id"])')
 echo "USER AUTH: $USER_AUTH"
 echo "USER ID: $USER_ID"
 
@@ -87,7 +87,7 @@ OK=$(curl --silent --header "authorization: $USER_AUTH" --header "Content-Type:a
 
 echo "Setting up the Portal catalogue"
 CATALOGUE_DATA=$(curl --silent --header "Authorization: $USER_AUTH" --header "Content-Type:application/json" --data '{"org_id": "'$ORG_ID'"}' http://$DOCKER_IP:$TYK_DASH_PORT/api/portal/catalogue 2>&1)
-CATALOGUE_ID=$(echo $CATALOGUE_DATA | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["Message"]')
+CATALOGUE_ID=$(echo $CATALOGUE_DATA | python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["Message"])')
 OK=$(curl --silent --header "Authorization: $USER_AUTH" http://$DOCKER_IP:$TYK_DASH_PORT/api/portal/catalogue 2>&1)
 
 echo "Creating the Portal Home page"
