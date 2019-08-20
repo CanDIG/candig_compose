@@ -235,9 +235,12 @@ ret_val=$(curl -H "Authorization: $USER_AUTH" \
   -X POST \
   -d "${VAR}" http://$DOCKER_IP:$TYK_DASH_PORT/api/apis/ 2>&1)
 
-export API_DB_ID=$(echo $ret_val | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["Meta"]')
-export API_DEF=$(curl --silent --header "authorization: $USER_AUTH" http://$DOCKER_IP:$TYK_DASH_PORT/api/apis/$API_DB_ID |  python -c 'import json,sys;obj=json.load(sys.stdin);print json.dumps(obj["api_definition"])')
-export API_ID=$(echo $API_DEF |  python -c 'import json,sys;obj=json.load(sys.stdin);print obj["api_id"]')
+export API_DB_ID=$(echo $ret_val | python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["Meta"])')
+export API_DEF=$(curl --silent --header "authorization: $USER_AUTH" \
+  http://$DOCKER_IP:$TYK_DASH_PORT/api/apis/$API_DB_ID \
+  |  python3 -c 'import json,sys;obj=json.load(sys.stdin);print(json.dumps(obj["api_definition"]))')
+export API_ID=$(echo $API_DEF |  python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["api_id"])')
+export API_ID=$(echo $API_DEF |  python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["api_id"])')
 
 echo API ID: $API_ID
 

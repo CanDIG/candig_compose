@@ -41,7 +41,7 @@ valid_json () {
 
   putative=${1}
 
-  echo $putative | python -c 'import json,sys;obj=json.load(sys.stdin)' 2> /dev/null
+  echo $putative | python3 -c 'import json,sys;obj=json.load(sys.stdin)' 2> /dev/null
   ret_val=$?
   if [ $ret_val = 0 ]; then
      echo JSON is valid
@@ -72,7 +72,7 @@ get_token () {
     -d "password=$KC_PW" \
     -d "grant_type=password" \
     "${KC_LOCAL_URL}:${KC_LOCAL_PORT}/auth/realms/master/protocol/openid-connect/token" 2> /dev/null )
-  echo ${BID} | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["access_token"]'
+  echo ${BID} | python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["access_token"])'
 }
 
 ######################
@@ -157,11 +157,12 @@ get_secret () {
 
   id=$(curl -H "Authorization: bearer ${KC_TOKEN}" \
     ${KC_LOCAL_URL}:${KC_LOCAL_PORT}/auth/admin/realms/candig/clients 2> /dev/null \
-    | python -c 'import json,sys;obj=json.load(sys.stdin); print [l["id"] for l in obj if l["clientId"] == "'"$KC_CLIENT_ID"'" ][0]')
+    | python3 -c 'import json,sys;obj=json.load(sys.stdin); print([l["id"] for l in obj if l["clientId"] ==
+    "'"$KC_CLIENT_ID"'" ][0])')
 
   curl -H "Authorization: bearer ${KC_TOKEN}" \
     ${KC_LOCAL_URL}:${KC_LOCAL_PORT}/auth/admin/realms/candig/clients/$id/client-secret 2> /dev/null |\
-    python -c 'import json,sys;obj=json.load(sys.stdin); print obj["value"]'
+    python3 -c 'import json,sys;obj=json.load(sys.stdin); print(obj["value"])'
 
 }
 ##################################

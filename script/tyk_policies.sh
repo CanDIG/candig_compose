@@ -27,7 +27,7 @@ POL_DATA=$(curl -X POST -H "authorization: $USER_AUTH" \
     "tags": ["Startup Users"]
 }' http://$DOCKER_IP:$TYK_DASH_PORT/api/portal/policies)
 
-export POL_ID=$(echo $POL_DATA | python -c 'import json,sys;obj=json.load(sys.stdin);print obj["Message"]')
+export POL_ID=$(echo $POL_DATA | python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["Message"])')
 
 echo Policy ID: $POL_ID
 
