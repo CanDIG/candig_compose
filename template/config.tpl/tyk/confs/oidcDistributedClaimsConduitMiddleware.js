@@ -1,5 +1,7 @@
 // ---- OIDC Distributed Claims Conduit middleware -----
 
+// TODO: refactor this codebase for all that is holy.
+
 var version = "0.0.100";
 
 var oidcDistributedClaimsConduitMiddleware = new TykJS.TykMiddleware.NewMiddleware({});
@@ -59,7 +61,8 @@ oidcDistributedClaimsConduitMiddleware.NewProcessRequest(function(request, sessi
                 "Domain": "http://172.17.202.192:12666",  // TODO: Pass this dynamically or do some munging with the URLs
                 "Resource": claimSources[item]
             };
-
+            
+            // TODO: exception handling here, the domain or resource maybe missing
             var encodedResponse = TykMakeHttpRequest(JSON.stringify(claimRequest));
             var decodedResponse = JSON.parse(encodedResponse);
             claimResponses[item] = decodedResponse;
