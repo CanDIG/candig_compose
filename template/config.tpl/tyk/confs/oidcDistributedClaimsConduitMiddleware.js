@@ -2,10 +2,10 @@
 
 // TODO: refactor this codebase for all that is holy.
 
+
 var version = "0.0.100";
 
 var oidcDistributedClaimsConduitMiddleware = new TykJS.TykMiddleware.NewMiddleware({});
-
 
 oidcDistributedClaimsConduitMiddleware.NewProcessRequest(function(request, session, spec) {
 
@@ -28,8 +28,6 @@ oidcDistributedClaimsConduitMiddleware.NewProcessRequest(function(request, sessi
             })
         }
         var decodedPayload = JSON.parse(b64dec(tokenPayload))
-        //log(JSON.stringify(decodedPayload));
-        //log(tokenPayload);
         
         try {
             var _claim_names = decodedPayload["_claim_names"];
@@ -47,34 +45,59 @@ oidcDistributedClaimsConduitMiddleware.NewProcessRequest(function(request, sessi
         for (var item in _claim_names) {
             try {
                 var claim = _claim_names[item];
-                claimSources[item] = _claim_sources[claim];  // get the URL
+                claimSources[item] = _claim_sources[claim]["endpoint"];  // get the URL
             } catch(err) {
                 log("Claim item is missing in either _claim_names or _claim_sources");
             }
         }
-        //log(JSON.stringify(claimSources));
 
         var claimResponses = {};
         for (var item in claimSources) {
-            var claimRequest = {
-                "Method": "GET",
-                "Domain": "http://172.17.202.192:12666",  // TODO: Pass this dynamically or do some munging with the URLs
-                "Resource": claimSources[item]
-            };
+            var url = claimSources[item];
             
-            // TODO: exception handling here, the domain or resource maybe missing
-            var encodedResponse = TykMakeHttpRequest(JSON.stringify(claimRequest));
-            var decodedResponse = JSON.parse(encodedResponse);
-            claimResponses[item] = decodedResponse;
+            try {
+                // as disgusting as this looks, I have no other option
+                // this was the simplest way to parse the URL
+                var splitUrl = url.split("/");
+                var urlDomain = splitUrl.slice(0, 3).join("/").toString();
+                var urlSegments = "/" + splitUrl.slice(3).join("/").toString();
+    
+                var claimRequest = {
+                    "Method": "GET",
+                    "Domain": urlDomain,
+                    "Resource": urlSegments
+                };
+                log("CLAIM STUFF: "+JSON.stringify(claimRequest));
+            } catch(err) {
+                log("sweet lord jesus");
+            }
+
+            try {
+                var encodedResponse = TykMakeHttpRequest(JSON.stringify(claimRequest));
+            } catch(err) {
+                log("Request to "+claimRequest.Domain+claimSources[item]+" failed.");
+            }
+
+            try {
+                var decodedResponse = JSON.parse(encodedResponse);
+                claimResponses[item] = decodedResponse;
+            } catch(err) {
+                log("JSON parsing failed for the response");
+            }
         }
-        //log("claim responses "+JSON.stringify(claimResponses));
         
         for (var item in claimResponses) {
-            request.SetHeaders["X-Claim-"+item.replace(/_/g, "-").toUpperCase()] = claimResponses[item].Body;
+            // adds header like 
+            // X-Claim-Profyle-Member: <...JWT token...>
+            try {
+                var distributedClaimToken = claimResponses[item].Body;
+                request.SetHeaders["X-Claim-"+item.replace(/_/g, "-").toUpperCase()] = distributedClaimToken;
+            } catch(err) {
+                log("Could not add X-Claim- headers to the request. Check the responses type.");
+            }
+            
         }
-        request.SetHeaders["AWESOME"] = "POSSUM";
-        request.Headers["HAWESOME"] = "HPOSSUM";
-        log("request headers "+JSON.stringify(request.Headers));
+        //log("request headers "+JSON.stringify(request.Headers));
     }
     
     // MUST return both the request and session
