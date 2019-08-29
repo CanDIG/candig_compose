@@ -6,6 +6,7 @@ services:
   candig:
     volumes:
     - ${LOCAL_TYK_CONFIG_PATH}/authMiddleware.js:/opt/tyk-gateway/middleware/authMiddleware.js
+    - ${LOCAL_TYK_CONFIG_PATH}/oidcDistributedClaimsConduitMiddleware.js:/opt/tyk-gateway/middleware/oidcDistributedClaimsConduitMiddleware.js
     - ${LOCAL_TYK_CONFIG_PATH}/tyk.conf:/opt/tyk-gateway/tyk.conf
   candigauth:
     volumes:

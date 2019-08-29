@@ -143,6 +143,13 @@ VAR='{
           "require_session": false
         }
      ],
+     "post": [
+        {
+          "name": "oidcDistributedClaimsConduitMiddleware",
+          "path": "/opt/tyk-gateway/middleware/oidcDistributedClaimsConduitMiddleware.js",
+          "require_session": false
+        }
+     ],
     "id_extractor": {
       "extract_with": "",
       "extract_from": "",
@@ -155,7 +162,6 @@ VAR='{
       "name": ""
     },
     "post_key_auth": [],
-    "post": [],
     "response": []
   },
   "api_id": "",
