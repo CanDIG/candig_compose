@@ -1,18 +1,15 @@
 // ---- OIDC Distributed Claims Conduit middleware -----
 
-// TODO: refactor this codebase for all that is holy.
+// Trying not to pollute global namespace
+var oidcDistributedClaimsConduitMiddlewareUtil = {
+    version: "0.0.100",
 
+    versionLog: function(content) {
+        // log something
+        log(version+content);
+    },
 
-var version = "0.0.100";
-
-var oidcDistributedClaimsConduitMiddleware = new TykJS.TykMiddleware.NewMiddleware({});
-
-oidcDistributedClaimsConduitMiddleware.NewProcessRequest(function(request, session, spec) {
-
-    log("Running OIDC Distributed Claims Conduit JSVM middleware");
-
-    
-    if (request.Headers["Authorization"] != undefined) {
+    extractToken: function(request) {
         try {
             var token = request.Headers["Authorization"][0].split(" ")[1];
             var tokenPayload = token.split(".")[1];
@@ -27,21 +24,26 @@ oidcDistributedClaimsConduitMiddleware.NewProcessRequest(function(request, sessi
                 tokenPayload += "="
             })
         }
-        var decodedPayload = JSON.parse(b64dec(tokenPayload))
-        
+        var decodedPayload = JSON.parse(b64dec(tokenPayload));
+
+        return decodedPayload;
+    },
+
+    oidcClaimsMemberSanityCheck: function(decodedPayload, memberName) {
+        var member = {};
+
         try {
-            var _claim_names = decodedPayload["_claim_names"];
+            member = decodedPayload[memberName];
         } catch(err) {
-            log("Cannot find _claim_names in the token payload");
+            log("Cannot find "+memberName+" in the token payload");
         }
-        
-        try {
-            var _claim_sources = decodedPayload["_claim_sources"];
-        } catch(err) {
-            log("Cannot find _claim_sources in the token payload");
-        }
-        
+
+        return member;
+    },
+
+    getClaimSources: function(_claim_names, _claim_sources) {
         var claimSources = {};  // store map of URLs
+
         for (var item in _claim_names) {
             try {
                 var claim = _claim_names[item];
@@ -51,7 +53,12 @@ oidcDistributedClaimsConduitMiddleware.NewProcessRequest(function(request, sessi
             }
         }
 
+        return claimSources;
+    },
+
+    getClaimResponses: function(claimSources) {
         var claimResponses = {};
+
         for (var item in claimSources) {
             var url = claimSources[item];
             
@@ -85,7 +92,11 @@ oidcDistributedClaimsConduitMiddleware.NewProcessRequest(function(request, sessi
                 log("JSON parsing failed for the response");
             }
         }
-        
+
+        return claimResponses;
+    },
+
+    setClaimHeaders: function(request, claimResponses) {
         for (var item in claimResponses) {
             // adds header like 
             // X-Claim-Profyle-Member: <...JWT token...>
@@ -97,7 +108,29 @@ oidcDistributedClaimsConduitMiddleware.NewProcessRequest(function(request, sessi
             }
             
         }
-        //log("request headers "+JSON.stringify(request.Headers));
+    }
+};
+
+
+
+var oidcDistributedClaimsConduitMiddleware = new TykJS.TykMiddleware.NewMiddleware({});
+
+oidcDistributedClaimsConduitMiddleware.NewProcessRequest(function(request, session, spec) {
+
+    log("Running OIDC Distributed Claims Conduit JSVM middleware");
+
+    if (request.Headers["Authorization"] != undefined) {
+
+        var decodedPayload = oidcDistributedClaimsConduitMiddlewareUtil.extractToken(request);
+        
+        var _claim_names = oidcDistributedClaimsConduitMiddlewareUtil.oidcClaimsMemberSanityCheck(decodedPayload, "_claim_names");
+        var _claim_sources = oidcDistributedClaimsConduitMiddlewareUtil.oidcClaimsMemberSanityCheck(decodedPayload, "_claim_sources");
+
+        var claimSources = oidcDistributedClaimsConduitMiddlewareUtil.getClaimSources(_claim_names, _claim_sources);
+
+        var claimResponses = oidcDistributedClaimsConduitMiddlewareUtil.getClaimResponses(claimSources)
+        
+        oidcDistributedClaimsConduitMiddlewareUtil.setClaimHeaders(request, claimResponses);
     }
     
     // MUST return both the request and session
