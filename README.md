@@ -12,7 +12,7 @@ See instructions to install Docker: https://runnable.com/docker/getting-started/
 * You will need `docker-compse`.  If compose is not available on you machine you can download its binary
     ```
     wget -O docker-compose \
-    "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)")
+    "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)"
     ```
 * Save the binary somewhere in your `$PATH`.
 * Make it executable
@@ -22,7 +22,7 @@ See instructions to install Docker: https://runnable.com/docker/getting-started/
 
 ### Ports
 
-For this setup to work without a lot of changes, please make sure should be available on the machine where the CanDig containers are deployed.
+For this setup to work without a lot of changes, please make sure should be available on the machine where the CanDIG containers are deployed.
 
 * `3000`
 * `8081`
@@ -54,7 +54,7 @@ Make changes to `$WORKDIR/config/config_resources` according to your needs.
 ### 2. Create your compose files
 
 ```
-./create_compose.sh -o $WORKDIR/config
+./create_compose.sh -o $WORKDIR/config/config_resources
 ```
 
 This creates two files `yml/containers_network.yml` and `yml/volumes.yml`.
