@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   tyk-dashboard:
-    image: tykio/tyk-dashboard:v1.7.1
+    image: tykio/tyk-dashboard:v1.8.5
     ports:
     - "3000:3000"
     - "5000:5000"
@@ -11,7 +11,7 @@ services:
     - tyk-redis
     - tyk-mongo
   candig:
-    image: tykio/tyk-gateway:v2.6.2
+    image: tykio/tyk-gateway:v2.8.4
     ports:
     - "${TYK_GATW_LOCAL_PORT}:8080"
     networks:
