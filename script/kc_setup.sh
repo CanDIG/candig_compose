@@ -156,12 +156,12 @@ redirect=$4
 get_secret () {
 
   id=$(curl -H "Authorization: bearer ${KC_TOKEN}" \
-    ${KC_LOCAL_URL}:${KC_LOCAL_PORT}/auth/admin/realms/candig/clients 2> /dev/null \
+    ${KC_LOCAL_URL}:${KC_LOCAL_PORT}/auth/admin/realms/${KC_REALM}/clients 2> /dev/null \
     | python3 -c 'import json,sys;obj=json.load(sys.stdin); print([l["id"] for l in obj if l["clientId"] ==
     "'"$KC_CLIENT_ID"'" ][0])')
 
   curl -H "Authorization: bearer ${KC_TOKEN}" \
-    ${KC_LOCAL_URL}:${KC_LOCAL_PORT}/auth/admin/realms/candig/clients/$id/client-secret 2> /dev/null |\
+    ${KC_LOCAL_URL}:${KC_LOCAL_PORT}/auth/admin/realms/${KC_REALM}/clients/$id/client-secret 2> /dev/null |\
     python3 -c 'import json,sys;obj=json.load(sys.stdin); print(obj["value"])'
 
 }
@@ -179,7 +179,7 @@ echo create_client ${KC_CLIENT_ID}
 set_client ${KC_REALM} ${KC_CLIENT_ID} "${TYK_LISTEN_PATH}" ${KC_LOGIN_REDIRECT_PATH}
 
 echo getting kc client secret
-export KC_SECRET=$(get_secret)
+export KC_SECRET=$(get_secret  ${KC_REALM})
 
 if $ADD_USER ; then
   add_user
