@@ -53,6 +53,8 @@ services:
     - tyk
   candig_server:
     image: c3genomics/candig_server
+    ports:
+    - "80:80"
     entrypoint:
     - candig_server
     - --host
