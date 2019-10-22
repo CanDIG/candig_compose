@@ -509,7 +509,7 @@ VARAUTHAPI='{
       "meta": {}
     },
     "strip_auth_data": false,
-    "id": "5dae06162c83a60001144058",
+    "id": "",
     "certificates": [],
     "enable_signature_checking": false,
     "use_openid": false,
@@ -529,18 +529,18 @@ VARAUTHAPI='{
 
 
 echo CREATING TYK AUTHENTICATION API 
-ret_val=$(curl -H "Authorization: $USER_AUTH" \
+ret_val_auth=$(curl -H "Authorization: $USER_AUTH" \
   -s \
   -H "Content-Type: application/json" \
   -X POST \
   -d "${VARAUTHAPI}" http://$DOCKER_IP:$TYK_DASH_PORT/api/apis/ 2>&1)
 
-export API_DB_ID=$(echo $ret_val | python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["Meta"])')
-export API_DEF=$(curl --silent --header "authorization: $USER_AUTH" \
-  http://$DOCKER_IP:$TYK_DASH_PORT/api/apis/$API_DB_ID \
+export API_DB_ID_AUTH=$(echo $ret_val_auth | python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["Meta"])')
+export API_DEF_AUTH=$(curl --silent --header "authorization: $USER_AUTH" \
+  http://$DOCKER_IP:$TYK_DASH_PORT/api/apis/$API_DB_ID_AUTH \
   |  python3 -c 'import json,sys;obj=json.load(sys.stdin);print(json.dumps(obj["api_definition"]))')
-export API_ID=$(echo $API_DEF |  python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["api_id"])')
-export API_ID=$(echo $API_DEF |  python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["api_id"])')
+export API_ID_AUTH=$(echo $API_DEF_AUTH |  python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["api_id"])')
+export API_ID_AUTH=$(echo $API_DEF_AUTH |  python3 -c 'import json,sys;obj=json.load(sys.stdin);print(obj["api_id"])')
 
-echo API ID: $API_ID
+echo API ID: $API_ID_AUTH
 
