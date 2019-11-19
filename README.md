@@ -126,3 +126,70 @@ docker-compose -f yml/containers_network.yml -f yml/volumes.yml logs -f
 ./candig_setup.sh \
 -o  $WORKDIR/config -k keycloachost:8081 -t tykhost
 ```
+
+## Deployment Behind an HTTPS proxy
+
+If you have a working http deployement, you can add these modification 
+to the candig and httpd configs.
+  
+Here, the proxy is using a encryption certificate while the candig_container
+tools are all unencrypted. This mean that to use this setup, you need to 
+consider the network behind the proxy to be secure.
+
+#### The config file
+Specific `$WORKDIR/config` setup:
+
+Make sure the public address starts with `https` and that the public PORT 
+are `443`, the you will be behind a proxy, so `PROXY_ADDRESS_FORWARDING=true`
+```
+export CANDIG_PUBLIC_URL=https://<public  TYK adress>
+export CANDIG_PUBLIC_PORT=443
+export KC_PUBLIC_URL=https://<public KC adress>
+export KC_PUBLIC_PORT=443
+export PROXY_ADDRESS_FORWARDING=true
+```
+
+#### The Apache httpd config
+
+
+<VirtualHost <public KC ip>:443>
+   ServerName <public KC adress>
+   RemoteIPHeader X-Forwarded-For 
+   RequestHeader set X-Forwarded-Proto "https"
+   SSLProxyEngine On
+   SSLProxyVerify none
+   SSLProxyCheckPeerCN Off
+   SSLProxyCheckPeerExpire Off
+   ProxyPreserveHost On
+   ProxyPass /auth http://<local KC ip>:<local KC port>/auth
+   ProxyPassReverse /auth http://<local KC ip>:<local KC port>/auth
+
+   SSLEngine on
+   SSLProtocol all -SSLv2 -SSLv3 +TLSv1.2
+   SSLCertificateFile       /<path_to>/cert.pem
+   SSLCertificateKeyFile    /<path_to>/privkey.pem
+   SSLCertificateChainFile  /<path_to>/fullchain.pem
+</VirtualHost>
+
+
+<VirtualHost <public  TYK ip>:443>
+   ServerName <public  TYK adress>
+   RemoteIPHeader X-Forwarded-For
+   RequestHeader set X-Forwarded-Proto "https"
+   SSLProxyEngine On
+   SSLProxyVerify none
+   SSLProxyCheckPeerCN Off
+   SSLProxyCheckPeerExpire Off
+   ProxyPreserveHost On
+   ProxyPass / http://<local  TYK ip>:<local  TYK port>/
+   ProxyPassReverse / http://<local  TYK ip>:<local  TYK port>/
+
+   SSLEngine on
+   SSLProtocol all -SSLv2 -SSLv3  +TLSv1.2
+   SSLCertificateFile       /<path_to>/cert.pem
+   SSLCertificateKeyFile    /<path_to>/privkey.pem
+   SSLCertificateChainFile  /<path_to>/fullchain.pem
+</VirtualHost>
+
+
+#### Get a letsencrypt certificate
