@@ -166,9 +166,9 @@ export PROXY_ADDRESS_FORWARDING=true
 
    SSLEngine on
    SSLProtocol all -SSLv2 -SSLv3 +TLSv1.2
-   SSLCertificateFile       /etc/letsencrypt/live/pat_to/cert.pem
-   SSLCertificateKeyFile    /etc/letsencrypt/live/pat_to/privkey.pem
-   SSLCertificateChainFile  /etc/letsencrypt/live/pat_to/fullchain.pem
+   SSLCertificateFile       /<path_to>/cert.pem
+   SSLCertificateKeyFile    /<path_to>/privkey.pem
+   SSLCertificateChainFile  /<path_to>/fullchain.pem
 </VirtualHost>
 
 
@@ -186,9 +186,9 @@ export PROXY_ADDRESS_FORWARDING=true
 
    SSLEngine on
    SSLProtocol all -SSLv2 -SSLv3  +TLSv1.2
-   SSLCertificateFile       /etc/letsencrypt/live/pat_to/cert.pem
-   SSLCertificateKeyFile    /etc/letsencrypt/live/pat_to/privkey.pem
-   SSLCertificateChainFile  /etc/letsencrypt/live/pat_to/fullchain.pem
+   SSLCertificateFile       /<path_to>/cert.pem
+   SSLCertificateKeyFile    /<path_to>/privkey.pem
+   SSLCertificateChainFile  /<path_to>/fullchain.pem
 </VirtualHost>
 
 
