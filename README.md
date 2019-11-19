@@ -127,9 +127,11 @@ docker-compose -f yml/containers_network.yml -f yml/volumes.yml logs -f
 -o  $WORKDIR/config -k keycloachost:8081 -t tykhost
 ```
 
-## Deployment Behind a proxy
+## Deployment Behind an HTTPS proxy
 
-We have tested the deployment behind Apache https and Ngingx.
+If you have a working http deployement, you can add these modification 
+to the candig and httpd configs.
+  
 Here, the proxy is using a encryption certificate while the candig_container
 tools are all unencrypted. This mean that to use this setup, you need to 
 consider the network behind the proxy to be secure.
