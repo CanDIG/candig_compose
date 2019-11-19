@@ -192,4 +192,4 @@ export PROXY_ADDRESS_FORWARDING=true
 </VirtualHost>
 
 
-#### Get a letsencryp certificate
+#### Get a letsencrypt certificate
