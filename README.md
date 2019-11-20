@@ -142,18 +142,18 @@ Specific `$WORKDIR/config` setup:
 Make sure the public address starts with `https` and that the public PORT 
 are `443`, the you will be behind a proxy, so `PROXY_ADDRESS_FORWARDING=true`
 ```
-export CANDIG_PUBLIC_URL=https://<public  TYK adress>
+export CANDIG_PUBLIC_URL=https://<public  TYK address>
 export CANDIG_PUBLIC_PORT=443
-export KC_PUBLIC_URL=https://<public KC adress>
+export KC_PUBLIC_URL=https://<public KC address>
 export KC_PUBLIC_PORT=443
 export PROXY_ADDRESS_FORWARDING=true
 ```
 
 #### The Apache httpd config
 
-
+```
 <VirtualHost <public KC ip>:443>
-   ServerName <public KC adress>
+   ServerName <public KC address>
    RemoteIPHeader X-Forwarded-For 
    RequestHeader set X-Forwarded-Proto "https"
    SSLProxyEngine On
@@ -173,7 +173,7 @@ export PROXY_ADDRESS_FORWARDING=true
 
 
 <VirtualHost <public  TYK ip>:443>
-   ServerName <public  TYK adress>
+   ServerName <public  TYK address>
    RemoteIPHeader X-Forwarded-For
    RequestHeader set X-Forwarded-Proto "https"
    SSLProxyEngine On
@@ -192,4 +192,58 @@ export PROXY_ADDRESS_FORWARDING=true
 </VirtualHost>
 
 
+# If you want to redirect http to https use the folowing virtual host
+<VirtualHost *:80> 
+   ServerName  candig.calculquebec.ca
+   #RemoteIPHeader X-Forwarded-For
+   #ProxyPreserveHost On
+   Redirect permanent / https://candig.calculquebec.ca/
+</VirtualHost>
+
+<VirtualHost *:80> 
+   ServerName  candigauth.calculquebec.ca
+   #RemoteIPHeader X-Forwarded-For
+   #ProxyPreserveHost On
+   Redirect permanent / https://candigauth.calculquebec.ca/
+</VirtualHost>
+
+
+```
+
+
+
+
 #### Get a letsencrypt certificate
+
+Get the certificate bot from (https://certbot.eff.org)
+```
+wget https://dl.eff.org/certbot-auto
+sudo mv certbot-auto /usr/local/bin/certbot-auto
+sudo chown root /usr/local/bin/certbot-auto
+sudo chmod 0755 /usr/local/bin/certbot-auto
+```
+
+Get your certificate:
+
+```
+certbot-auto certonly   --apache -d <public TYK address>   -d <public KC address>
+```
+The certificate will be good for both address but will be saved in `/etc/letsencrypt/live/<public TYK address>` since
+ it uses the first `-d` input has the reference. 
+
+Note that you might need to use:
+```
+certbot-auto certonly   --standalone -d <public TYK address>   -d <public KC address>
+```
+
+if you have no VirtualHost, redirection or other, running on port 80.
+
+
+
+Add the following to a cron tab ran by root (eg `sudo crontab -e`)
+
+```
+34 0 * * * /root/certbot-auto -q renew --post-hook "systemctl reload httpd"
+```
+
+and you are good to go.
