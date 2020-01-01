@@ -45,7 +45,11 @@ authMiddleware.NewProcessRequest(function(request, session, spec) {
             var idToken = tokenCookie.split("=")[1];
 
             if (isTokenExpired(idToken)) {
-                request.URL = loginUri
+                request.ReturnOverrides.ResponseCode = 302;
+                request.ReturnOverrides.ResponseHeaders = {
+                    "Location": spec.config_data.TYK_SERVER + "/auth/login?app_url=" + request.URL
+                };
+                log(request.URL);
             } else {
                 request.SetHeaders["Authorization"] = "Bearer " + idToken;
             }
