@@ -77,7 +77,7 @@ export TYK_POLICY_NAME="Candig policy"
 export KC_REALM='candig'
 export KC_SERVER="${KC_PUBLIC_URL}:${KC_PUBLIC_PORT}"
 export KC_CLIENT_ID='cq_candig'
-export KC_LOGIN_REDIRECT_PATH='/login_oidc'
+export KC_LOGIN_REDIRECT_PATH='/auth/login'
 
 export API_NAME="Candig Api"
 
