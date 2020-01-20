@@ -3,6 +3,9 @@
 var authMiddleware = new TykJS.TykMiddleware.NewMiddleware({});
 
 function getCookie(request, cookie_name) {
+    if (!("Cookie" in request.Headers)) {
+	return undefined;
+    }
     var splitCookie = request.Headers["Cookie"][0].split("; ");
     var valueCookie = _.find(splitCookie, function(cookie) {
         if (cookie.indexOf(cookie_name+"=") > -1) {
