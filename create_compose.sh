@@ -23,8 +23,8 @@ while getopts "do:" opt; do
     o)
       CONFIG_FILE=$OPTARG
       ;;
-    c)
-      DELETE_CONFIG_FOLDER=true
+    d)
+      DELETE_CONFIG_VOLUME=true
       ;;
    \?)
       usage
@@ -66,7 +66,7 @@ KC_HOST_NAME="${KC_PUBLIC_URL#http://}"
 export KC_HOST_NAME="${KC_HOST_NAME=#https://}"
 
 
-if [ -n "${DELETE_CONFIG_FOLDER}" ]; then
+if [ -n "${DELETE_CONFIG_VOLUME}" ]; then
   echo deleting yml_mongo-data yml_redis-data if present
   docker volume rm yml_mongo-data yml_redis-data 2> /dev/null
 
@@ -99,6 +99,6 @@ mkdir -p ./yml/
 echo Creating the Candig compose yml
  cat ${INPUT_TEMPLATE_DIR}/compose.tpl/volumes.yml.tpl | envsubst > ./yml/volumes.yml
  cat ${INPUT_TEMPLATE_DIR}/compose.tpl/containers_network.yml.tpl | envsubst > ./yml/containers_network.yml
- 
+
 
  echo Done
