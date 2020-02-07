@@ -1,4 +1,10 @@
 {
+  "app_path": "/opt/tyk-gateway/apps",
+  "policies": {
+    "policy_source": "file",
+    "policy_record_name": "/opt/tyk-gateway/policies/policies.json"
+  },
+  
   "Monitor": {
     "configuration": {
       "event_timeout": 0,
@@ -28,7 +34,6 @@
     },
     "type": ""
   },
-  "app_path": "./test_apps/",
   "auth_override": {
     "auth_provider": {
       "meta": null,
@@ -46,13 +51,6 @@
   "close_connections": false,
   "close_idle_connections": false,
   "control_api_hostname": "",
-  "db_app_conf_options": {
-    "connection_string": "http://tyk-dashboard:3000",
-    "node_is_segmented": false,
-    "tags": [
-      "test"
-    ]
-  },
   "disable_dashboard_zeroconf": false,
   "disable_virtual_path_blobs": false,
   "enable_analytics": false,
@@ -109,12 +107,7 @@
   "oauth_token_expire": 0,
   "optimisations_use_async_session_write": true,
   "pid_file_location": "./tyk-gateway.pid",
-  "policies": {
-    "allow_explicit_policy_id": true,
-    "policy_connection_string": "http://tyk-dashboard:3000",
-    "policy_record_name": "tyk_policies",
-    "policy_source": "service"
-  },
+  
   "public_key_path": "",
   "secret": "${TYK_NODE_SECRET}",
   "sentry_code": "",
@@ -157,7 +150,6 @@
     },
     "disable": true
   },
-  "use_db_app_configs": true,
   "use_graylog": false,
   "use_logstash": false,
   "use_redis_log": true,
