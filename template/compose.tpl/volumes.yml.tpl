@@ -11,6 +11,9 @@ services:
     - ${LOCAL_TYK_CONFIG_PATH}/api_candig.json:/opt/tyk-gateway/apps/api_candig.json
     - ${LOCAL_TYK_CONFIG_PATH}/api_auth.json:/opt/tyk-gateway/apps/api_auth.json
     - ${LOCAL_TYK_CONFIG_PATH}/policies.json:/opt/tyk-gateway/policies/policies.json
+  tyk-pump:
+    volumes:
+    - ${LOCAL_TYK_CONFIG_PATH}/pump.conf:/opt/tyk-pump/pump.conf
   candigauth:
     volumes:
     - ${LOCAL_KC_CONFIG_PATH}/standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml

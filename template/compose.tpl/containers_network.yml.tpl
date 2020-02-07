@@ -8,12 +8,29 @@ services:
     - tyk
     depends_on:
     - tyk-redis
+  tyk-pump:
+    image: tykio/tyk-pump-docker-pub:v0.5.3
+    networks:
+    - tyk
+    depends_on:
+    - tyk-redis
+    - tyk-mongo
+    - candig
   tyk-redis:
     image: redis:4.0.11-stretch
     ports:
     - "6379:6379"
     volumes:
     - redis-data:/data
+    networks:
+    - tyk
+  tyk-mongo:
+    image: mongo:3.2
+    command: ["mongod", "--smallfiles"]
+    ports:
+    - "27017:27017"
+    volumes:
+    - mongo-data:/data/db
     networks:
     - tyk
   candigauth:
