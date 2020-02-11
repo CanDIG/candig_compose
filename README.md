@@ -101,13 +101,13 @@ docker-compose -f yml/containers_network.yml -f yml/volumes.yml logs -f
 This will allow you to add your new API behind Tyk authentication so that your users
 will have to log in before seeing that API endpoint. This helps with single sign-on.
 
-Before adding an API behind Tyk, you will have to make sure it can be launched. A good
+**Note**: Before adding an API behind Tyk, you will have to make sure it can be launched. A good
 approach to avoid a lot of headaches is to create sections within the `docker-compose`
 file(s) for the new API. This way you can make sure that your other containers can access
 and link to the containers for the new API. This is the most tedious part of this process
 and needs to be improved, among other things.
 
-To add new API, you will need to follow this order:
+### Steps to add new API
 
 1. *Create an API file*: Look at the [tyk/confs] directory. You can use [api_candig.json]
 as an example and modify from step 2.
