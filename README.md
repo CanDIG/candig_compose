@@ -98,22 +98,31 @@ docker-compose -f yml/containers_network.yml -f yml/volumes.yml logs -f
 
 ## Adding new API behind Tyk authentication
 
+This will allow you to add your new API behind Tyk authentication so that your users
+will have to log in before seeing that API endpoint. This helps with single sign-on.
+
+Before adding an API behind Tyk, you will have to make sure it can be launched. A good
+approach to avoid a lot of headaches is to create sections within the `docker-compose`
+file(s) for the new API. This way you can make sure that your other containers can access
+and link to the containers for the new API. This is the most tedious part of this process
+and needs to be improved, among other things.
+
 To add new API, you will need to follow this order:
 
 1. *Create an API file*: Look at the [tyk/confs] directory. You can use [api_candig.json]
 as an example and modify from step 2.
 2. Edit the newly created API JSON file with following
-   * "api_id" - a unique value amongst all API JSON files.
-   * "proxy.target_url" - HOST:PORT of the target API.
-   * "proxy.listen_path" - note if you give the path a trailing slash.
-   * "slug" - this is what tyk exposes your API for edits.
-   * "name" - a unique name.
-   * "config_data.SESSION_ENDPOINTS" -  note if you give it a trailing slash.
+   * `api_id` - a unique value amongst all API JSON files.
+   * `proxy.target_url` - HOST:PORT of the target API.
+   * `proxy.listen_path` - note if you give the path a trailing slash.
+   * `slug` - this is what tyk exposes your API for edits.
+   * `name` - a unique name.
+   * `config_data.SESSION_ENDPOINTS` -  note if you give it a trailing slash.
 5. Add the docker mount of the file in docker-compose volumes under Tyk's settings.
 6. Recreate the container by running `docker-compose` command again.
-7. Edit [policies.json] to add a section of new API under "access_rights".
+7. Edit [policies.json] to add a section of new API under `access_rights`.
 8. Restart Tyk container to be sure.
-9. Edit [key_request.json] to add a section of new API under "access_rights".
+9. Edit [key_request.json] to add a section of new API under `access_rights`.
 10. Use the edited [key_request.json] with key generation Tyk-API call
 ```
 $ curl ${TYK_HOST}:${TYK_PORT}/tyk/keys/create -H "x-tyk-authorization: ${TYK_SECRET}" -s -H "Content-Type: application/json" -X POST -d '{
