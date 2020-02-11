@@ -11,7 +11,7 @@
 	"target_url": "${LOCAL_CANDIG_SERVER}",
 	"strip_listen_path": true,
         "disable_strip_slash": false,
-	"listen_path": "/${TYK_LISTEN_PATH}",
+	"listen_path": "${TYK_LISTEN_PATH}",
         "transport": {
             "ssl_insecure_skip_verify": false,
             "ssl_ciphers": [],
