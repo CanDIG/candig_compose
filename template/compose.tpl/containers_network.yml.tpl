@@ -17,9 +17,7 @@ services:
     - tyk-mongo
     - candig
   tyk-redis:
-    image: redis:4.0.11-stretch
-    ports:
-    - "6379:6379"
+    image: redis:4.0.14-alpine
     volumes:
     - redis-data:/data
     networks:
@@ -27,8 +25,6 @@ services:
   tyk-mongo:
     image: mongo:3.2
     command: ["mongod", "--smallfiles"]
-    ports:
-    - "27017:27017"
     volumes:
     - mongo-data:/data/db
     networks:

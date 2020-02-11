@@ -7,9 +7,10 @@ usage (){
 echo
 echo "usage: $0 -o <config_file>"
 echo
-echo "   -o        default is ./config_resource."
-echo "              To be created with the help of config_resource.tpl"
-
+echo "   -o        Config file path, default is ./config_resource."
+echo "   -d        Deleted existing named volume for tyk db"
+echo "              (redis-data and mongo-data). Docker cli needs to"
+echo "              have been installed"
 }
 
 
@@ -17,10 +18,13 @@ echo "              To be created with the help of config_resource.tpl"
 
 CONFIG_FILE=./config_resource
 
-while getopts "o:" opt; do
+while getopts "do:" opt; do
   case $opt in
     o)
       CONFIG_FILE=$OPTARG
+      ;;
+    d)
+      DELETE_CONFIG_VOLUME=true
       ;;
    \?)
       usage
@@ -62,10 +66,15 @@ KC_HOST_NAME="${KC_PUBLIC_URL#http://}"
 export KC_HOST_NAME="${KC_HOST_NAME=#https://}"
 
 
+if [ -n "${DELETE_CONFIG_VOLUME}" ]; then
+  echo deleting yml_mongo-data yml_redis-data if present
+  docker volume rm yml_mongo-data yml_redis-data 2> /dev/null
 
-mkdir -p ${OUPTUT_CONFIGURATION_DIR}
+fi
 
-cp -r ${INPUT_TEMPLATE_DIR}/config.tpl/*  ${OUPTUT_CONFIGURATION_DIR}
+mkdir -p "${OUPTUT_CONFIGURATION_DIR}"
+
+cp -r "${INPUT_TEMPLATE_DIR}"/config.tpl/*  "${OUPTUT_CONFIGURATION_DIR}"
 
 echo Creating the Candig config files
 find ${INPUT_TEMPLATE_DIR}/config.tpl -type f -name '*.tpl' -print0 |
@@ -89,6 +98,6 @@ mkdir -p ./yml/
 echo Creating the Candig compose yml
  cat ${INPUT_TEMPLATE_DIR}/compose.tpl/volumes.yml.tpl | envsubst > ./yml/volumes.yml
  cat ${INPUT_TEMPLATE_DIR}/compose.tpl/containers_network.yml.tpl | envsubst > ./yml/containers_network.yml
- 
+
 
  echo Done

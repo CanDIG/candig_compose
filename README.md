@@ -21,13 +21,43 @@ See instructions to install Docker: https://runnable.com/docker/getting-started/
 
 ### Ports
 
-For this setup to work without a lot of changes, please make sure should be available on the machine where the CanDIG containers are deployed.
+For this setup to work without a lot of changes, please make sure should
+be available on the machine where the CanDIG containers are deployed.
 
 * `3000`
 * `8081`
 * `8080`
 
 Any other ports as more APIs are added.
+
+
+### Caveats
+
+#### In case of failure
+
+You maybe able to use the previously generated configurations. However,
+if you see errors such as
+
+```
+CREATING A TYK API
+Traceback (most recent call last):
+    ...
+API ID:
+Creating policy Candig policy for API Candig Api:
+Policy ID: Not authorised
+Updating Api with Policy Not authorised
+    ...
+{"Status":"Error","Message":"Not authorised","Meta":null}
+DONE
+```
+then, you must `docker prune` *everything* with the command
+
+```bash
+docker system prune -a -f --volumes
+```
+
+After this, you can continue recreating the docker containers via
+`docker-compose` (step 3 below).
 
 ## Deploy on `localhost`
 
@@ -60,8 +90,8 @@ Make changes to `$WORKDIR/config/config` according to your needs.
 This creates two files `yml/containers_network.yml` and `yml/volumes.yml`.
 
 One has the container definition and networking of the candig servers
-while the other one controls the volumes that are mounted from the host to the
-container.
+while the other one controls the volumes that are mounted from the host
+to the container.
 
 Note that the files to be mounted in `yml/volumes.yml` have been created locally
 in the `${OUPTUT_CONFIGURATION_DIR}` folder has defined in the `config`
@@ -84,6 +114,8 @@ docker-compose -f yml/containers_network.yml -f yml/volumes.yml logs -f
 
 #### Development
 
+When all servers run on the localhost, true if you used the docker-compose recipe.
+
 ```
 ./candig_setup.sh \
 -o  $WORKDIR/config -k localhost:8081 -t localhost
@@ -91,6 +123,8 @@ docker-compose -f yml/containers_network.yml -f yml/volumes.yml logs -f
 
 #### Production
 
+It might happen in production that the keycloak and tyk server are not running on the local host and that they have 
+not been started with compose or container. You can still configure then with the  `candig_setup.sh` script: 
 ```
 ./candig_setup.sh \
 -o  $WORKDIR/config -k keycloachost:8081 -t tykhost
@@ -154,3 +188,123 @@ You should see your API at the path you specified. Please note that this is all 
 [policies.json]: ./template/config.tpl/tyk/confs/policies.json
 [key_request.json]: ./template/config.tpl/tyk/confs/key_request.json
 
+## Deployment Behind an HTTPS proxy
+
+If you have a working http deployement, you can add these modification 
+to the candig and httpd configs.
+  
+Here, the proxy is using a encryption certificate while the candig_container
+tools are all unencrypted. This mean that to use this setup, you need to 
+consider the network behind the proxy to be secure.
+
+#### The config file
+Specific `$WORKDIR/config` setup:
+
+Make sure the public address starts with `https` and that the public PORT 
+are `443`, the you will be behind a proxy, so `PROXY_ADDRESS_FORWARDING=true`
+```
+export CANDIG_PUBLIC_URL=https://<public  TYK address>
+export CANDIG_PUBLIC_PORT=443
+export KC_PUBLIC_URL=https://<public KC address>
+export KC_PUBLIC_PORT=443
+export PROXY_ADDRESS_FORWARDING=true
+```
+
+#### The Apache httpd config
+
+```
+<VirtualHost <public KC ip>:443>
+   ServerName <public KC address>
+   RemoteIPHeader X-Forwarded-For 
+   RequestHeader set X-Forwarded-Proto "https"
+   SSLProxyEngine On
+   SSLProxyVerify none
+   SSLProxyCheckPeerCN Off
+   SSLProxyCheckPeerExpire Off
+   ProxyPreserveHost On
+   ProxyPass /auth http://<local KC ip>:<local KC port>/auth
+   ProxyPassReverse /auth http://<local KC ip>:<local KC port>/auth
+
+   SSLEngine on
+   SSLProtocol all -SSLv2 -SSLv3 +TLSv1.2
+   SSLCertificateFile       /<path_to>/cert.pem
+   SSLCertificateKeyFile    /<path_to>/privkey.pem
+   SSLCertificateChainFile  /<path_to>/fullchain.pem
+</VirtualHost>
+
+
+<VirtualHost <public  TYK ip>:443>
+   ServerName <public  TYK address>
+   RemoteIPHeader X-Forwarded-For
+   RequestHeader set X-Forwarded-Proto "https"
+   SSLProxyEngine On
+   SSLProxyVerify none
+   SSLProxyCheckPeerCN Off
+   SSLProxyCheckPeerExpire Off
+   ProxyPreserveHost On
+   ProxyPass / http://<local  TYK ip>:<local  TYK port>/
+   ProxyPassReverse / http://<local  TYK ip>:<local  TYK port>/
+
+   SSLEngine on
+   SSLProtocol all -SSLv2 -SSLv3  +TLSv1.2
+   SSLCertificateFile       /<path_to>/cert.pem
+   SSLCertificateKeyFile    /<path_to>/privkey.pem
+   SSLCertificateChainFile  /<path_to>/fullchain.pem
+</VirtualHost>
+
+
+# If you want to redirect http to https use the folowing virtual host
+<VirtualHost *:80> 
+   ServerName  candig.calculquebec.ca
+   #RemoteIPHeader X-Forwarded-For
+   #ProxyPreserveHost On
+   Redirect permanent / https://candig.calculquebec.ca/
+</VirtualHost>
+
+<VirtualHost *:80> 
+   ServerName  candigauth.calculquebec.ca
+   #RemoteIPHeader X-Forwarded-For
+   #ProxyPreserveHost On
+   Redirect permanent / https://candigauth.calculquebec.ca/
+</VirtualHost>
+
+
+```
+
+
+
+
+#### Get a letsencrypt certificate
+
+Get the certificate bot from (https://certbot.eff.org)
+```
+wget https://dl.eff.org/certbot-auto
+sudo mv certbot-auto /usr/local/bin/certbot-auto
+sudo chown root /usr/local/bin/certbot-auto
+sudo chmod 0755 /usr/local/bin/certbot-auto
+```
+
+Get your certificate:
+
+```
+certbot-auto certonly   --apache -d <public TYK address>   -d <public KC address>
+```
+The certificate will be good for both address but will be saved in `/etc/letsencrypt/live/<public TYK address>` since
+ it uses the first `-d` input has the reference. 
+
+Note that you might need to use:
+```
+certbot-auto certonly   --standalone -d <public TYK address>   -d <public KC address>
+```
+
+if you have no VirtualHost, redirection or other, running on port 80.
+
+
+
+Add the following to a cron tab ran by root (eg `sudo crontab -e`)
+
+```
+34 0 * * * /root/certbot-auto -q renew --post-hook "systemctl reload httpd"
+```
+
+and you are good to go.
