@@ -38,7 +38,7 @@ services:
     networks:
     - tyk
   candig_server:
-    build: ../../candig-server
+    image: c3genomics/candig_server
     entrypoint:
     - candig_server
     - --host
