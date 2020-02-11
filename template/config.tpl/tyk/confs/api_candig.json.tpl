@@ -1,5 +1,12 @@
 {
-    "api_id": "21",
+    "api_id": "${CANDIG_API_ID}",
+    "name": "${CANDIG_API_NAME}",
+    "use_openid": true,
+    "active": true,
+    "slug": "${CANDIG_API_SLUG}",
+
+    "enable_signature_checking": false,
+
     "jwt_issued_at_validation_skew": 0,
     "jwt_expires_at_validation_skew": 0,
     "upstream_certificates": {},
@@ -11,7 +18,7 @@
 	"target_url": "${LOCAL_CANDIG_SERVER}",
 	"strip_listen_path": true,
         "disable_strip_slash": false,
-	"listen_path": "${TYK_LISTEN_PATH}",
+	"listen_path": "/${TYK_LISTEN_PATH}",
         "transport": {
             "ssl_insecure_skip_verify": false,
             "ssl_ciphers": [],
@@ -93,23 +100,18 @@
             {
                 "issuer": "${KC_PUBLIC_URL}${KC_PUB_PORT}/auth/realms/${KC_REALM}",
                 "client_ids": {
-                    "${KC_CLIENT_ID_64}": "policy21"
+                    "${KC_CLIENT_ID_64}": "${TYK_POLICY_ID}"
                 }
             }
         ]
     },
 
-    "active": true,
-    "slug": "candig",
 
     "definition": {
 	"location": "header",
 	"key": "x-api-version"
     },
 
-    "name": "CanDIG",
-    "use_openid": true,
-    "enable_signature_checking": false,
 
     "internal": false,
     "jwt_skip_kid": false,

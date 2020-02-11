@@ -77,9 +77,18 @@ export TYK_POLICY_NAME="Candig policy"
 export KC_REALM='candig'
 export KC_SERVER="${KC_PUBLIC_URL}:${KC_PUBLIC_PORT}"
 export KC_CLIENT_ID='cq_candig'
+export KC_CLIENT_ID_64=$(echo -n ${KC_CLIENT_ID} | base64)
 export KC_LOGIN_REDIRECT_PATH='/auth/login'
 
-export API_NAME="Candig Api"
+export TYK_POLICY_ID="candig_policy"
+
+export AUTH_API_NAME="Authentication"
+export AUTH_API_ID="11"
+export AUTH_API_SLUG="authentication"
+
+export CANDIG_API_NAME="Candig Api"
+export CANDIG_API_ID="21"
+export CANDIG_API_SLUG="candig"
 
 # do not change
 export TYK_DASHB_LOCAL_PORT=3000

@@ -1,5 +1,5 @@
 {
-    "api_id": "11",
+    "api_id": "${AUTH_API_ID}",
     "use_keyless": true,
     "active": true,
     "strip_auth_data": false,
@@ -21,8 +21,8 @@
 	"auth_header_name": ""
     },
 
-    "name": "Authentication",
-    "slug": "authentication",
+    "name": "${AUTH_API_NAME}",
+    "slug": "${AUTH_API_SLUG}",
 
     "proxy": {
 	"target_url": "${LOCAL_CANDIG_SERVER}/auth/login",

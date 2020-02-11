@@ -272,8 +272,6 @@ export PROXY_ADDRESS_FORWARDING=true
 ```
 
 
-
-
 #### Get a letsencrypt certificate
 
 Get the certificate bot from (https://certbot.eff.org)

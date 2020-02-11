@@ -8,7 +8,7 @@
 #
 # $> ./tyk_setup.sh {IP ADDRESS:PORT of the tyk gateway}
 
-KC_CLIENT_ID_64=$(echo -n ${KC_CLIENT_ID} | base64)
+
 
 TYK_ORGANOSATION="Secure Cloud CQ"
 TYK_ORG_SHORT_NAME="SCCQ"
