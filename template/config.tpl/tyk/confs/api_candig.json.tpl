@@ -93,7 +93,7 @@
             {
                 "issuer": "${KC_PUBLIC_URL}${KC_PUB_PORT}/auth/realms/${KC_REALM}",
                 "client_ids": {
-                    "Y3FfY2FuZGln": "policy21"
+                    "${KC_CLIENT_ID_64}": "policy21"
                 }
             }
         ]
