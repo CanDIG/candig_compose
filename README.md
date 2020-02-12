@@ -143,7 +143,7 @@ and needs to be improved, among other things.
 
 ### Steps to add new API
 
-1. *Create an API file*: Look at the [tyk/confs] directory. You can use [api_candig.json]
+1. *Create an API file*: Look at the [tyk/confs] directory. You can use [api_candig.json.tpl]
 as an example and modify from step 2.
 2. Edit the newly created API JSON file with following
    * `api_id` - a unique value amongst all API JSON files.
@@ -156,8 +156,8 @@ as an example and modify from step 2.
 6. Recreate the container by running `docker-compose` command again.
 7. Edit [policies.json] to add a section of new API under `access_rights`.
 8. Restart Tyk container to be sure.
-9. Edit [key_request.json] to add a section of new API under `access_rights`.
-10. Use the edited [key_request.json] with key generation Tyk-API call
+9. Edit [key_request.json.tpl] to add a section of new API under `access_rights`.
+10. Use the edited [key_request.json.tpl] with key generation Tyk-API call
 ```
 $ curl ${TYK_HOST}:${TYK_PORT}/tyk/keys/create -H "x-tyk-authorization: ${TYK_SECRET}" -s -H "Content-Type: application/json" -X POST -d '{
    ...
@@ -179,14 +179,14 @@ $ curl ${TYK_HOST}:${TYK_PORT}/tyk/keys/create -H "x-tyk-authorization: ${TYK_SE
 ```
 11. Reload
 ```
-$ curl -H "x-tyk-authorization: &{TYK_SECRET}" -s ${TYK_HOST}:${TYK_PORT}/tyk/reload/group
+$ curl -H "x-tyk-authorization: ${TYK_SECRET}" -s ${TYK_HOST}:${TYK_PORT}/tyk/reload/group
 ```
 You should see your API at the path you specified. Please note that this is all slash-sensitive.
 
 [tyk/confs]: ./template/config.tpl/tyk/confs
-[api_candig.json]: ./template/config.tpl/tyk/confs/api_candig.json
-[policies.json]: ./template/config.tpl/tyk/confs/policies.json
-[key_request.json]: ./template/config.tpl/tyk/confs/key_request.json
+[api_candig.json.tpl]: ./template/config.tpl/tyk/confs/api_candig.json.tpl
+[policies.json.tpl]: ./template/config.tpl/tyk/confs/policies.json.tpl
+[key_request.json.tpl]: ./template/config.tpl/tyk/confs/key_request.json.tpl
 
 ## Deployment Behind an HTTPS proxy
 
