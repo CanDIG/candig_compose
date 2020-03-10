@@ -3,7 +3,7 @@ services:
   candig:
     image: tykio/tyk-gateway:v2.9.3
     environemnent:
-    - TYK_GW_SECRET=${TYK_NODE_SECRET}
+    - TYK_GW_SECRET=${SECRET_KEY}
     ports:
     - "${TYK_GATW_LOCAL_PORT}:8080"
     networks:
