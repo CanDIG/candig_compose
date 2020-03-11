@@ -5,8 +5,8 @@
 # Directory to store the configuration
 export OUPTUT_CONFIGURATION_DIR=/tmp/candig_conf
 
-## Change the password
-export SECRET_KEY=a_default_to_change_jfsaljfLKdjflKSJD
+##  This should be a good key!
+export SECRET_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 # You will be able to log this user and have acces to a test dataset
 export KC_TEST_USER=a_user
@@ -23,11 +23,6 @@ export CANDIG_TYK_USERNAME=a_default_to_change_test_bed@mail.com
 export CANDIG_TYK_PASSWORD=a_default_to_change_my.only.bonne.idee.pour.un.good.pasword
 export TYK_DASH_FROM_EMAIL="maybe_you@my_mail.com"
 export TYK_DASH_FROM_NAME="your name"
-
-# Get this lic from TYK here https://tyk.io/product/tyk-on-premises-free-edition/
-export ANALYTIC_LIC_KEY=""
-export TYK_NODE_SECRET=a_default_to_change_0rwejfkzp09uenjkfcspcajl
-export TYK_ANALYTIC_ADMIN_SECRET=a_default_to_change_oweuifhnsEWFSiwhqetutbsvbdf
 
 
 # typically the ports will be 443 and 443 for https adresses

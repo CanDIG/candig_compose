@@ -2,8 +2,6 @@ version: '3.3'
 services:
   candig:
     image: tykio/tyk-gateway:v2.9.3
-    environment:
-    - TYK_GW_SECRET=${SECRET_KEY}
     ports:
     - "${TYK_GATW_LOCAL_PORT}:8080"
     networks:
