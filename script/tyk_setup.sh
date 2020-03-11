@@ -20,8 +20,8 @@ fi
 sed -i -r 's/KC_SECRET": "[a-zA-Z0-9]*"/KC_SECRET": "'"$KC_SECRET"'"/g'   ${LOCAL_TYK_CONFIG_PATH}/api_auth.json
 
 
-echo reloading tyk 
 CONT_ID=$(docker ps  | grep candig | cut -d " " -f1)
+echo restarting Tyk 
 docker restart ${CONT_ID}
 
 

@@ -59,6 +59,7 @@ add_user() {
 # candigauth is the name of the keycloak server inside the compose network
 CONT_ID=$(docker ps  | grep candigauth | cut -d " " -f1)
 docker exec ${CONT_ID} keycloak/bin/add-user-keycloak.sh -u ${KC_TEST_USER} -p ${KC_TEST_USER_PW} -r ${KC_REALM}
+echo restarting Keycloak
 docker restart ${CONT_ID}
 
 }
