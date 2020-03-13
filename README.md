@@ -1,6 +1,5 @@
 # CanDIG Server Configuration and Deployment
 
-
 ## Prerequisites
 
 ### Docker
@@ -9,8 +8,7 @@ See instructions to install Docker: https://runnable.com/docker/getting-started/
 
 ### Docker Compose (docker-compose)
 
-* You will need `docker-compse`.  If compose is not available on your
-  machine you can download its binary
+* You will need `docker-compose`.  If compose is not available on you machine you can download its binary
     ```
     wget -O docker-compose \
     "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)"
@@ -29,6 +27,9 @@ be available on the machine where the CanDIG containers are deployed.
 * `3000`
 * `8081`
 * `8080`
+
+Any other ports as more APIs are added.
+
 
 ### Caveats
 
@@ -58,7 +59,6 @@ docker system prune -a -f --volumes
 After this, you can continue recreating the docker containers via
 `docker-compose` (step 3 below).
 
-
 ## Deploy on `localhost`
 
 ### 0. Create a working directory
@@ -67,7 +67,7 @@ E.g. `/path/to/my/candig/workdir`
 
 Let's say that is your `$WORKDIR`.
 
-### 1. Create your config from template: `config_resources` file
+### 1. Create your config from template: `config_resources.tpl` file
 
 `config_resource.tpl` is a template of a config file.
 
@@ -76,16 +76,15 @@ deployement but also password, keys and username all in clear! Be careful
 of where you will copy that file and who has acess to it.
 
 ```
-cp config_resource.tpl $WORKDIR/config/config_resources
+cp config_resource.tpl $WORKDIR/config/config
 ```
 
-Make changes to `$WORKDIR/config/config_resources` according to your
-needs.
+Make changes to `$WORKDIR/config/config` according to your needs.
 
 ### 2. Create your compose files
 
 ```
-./create_compose.sh -o $WORKDIR/config/config_resources
+./create_compose.sh -o $WORKDIR/config/config
 ```
 
 This creates two files `yml/containers_network.yml` and `yml/volumes.yml`.
@@ -94,9 +93,9 @@ One has the container definition and networking of the candig servers
 while the other one controls the volumes that are mounted from the host
 to the container.
 
-Note that the files to be mounted in `yml/volumes.yml` have been created
-locally in the `${OUPTUT_CONFIGURATION_DIR}` folder has defined in the
-`config_resource` file.
+Note that the files to be mounted in `yml/volumes.yml` have been created locally
+in the `${OUPTUT_CONFIGURATION_DIR}` folder has defined in the `config`
+file.
 
 ### 3. Spin up the Docker containers
 
@@ -130,6 +129,64 @@ not been started with compose or container. You can still configure then with th
 ./candig_setup.sh \
 -o  $WORKDIR/config -k keycloachost:8081 -t tykhost
 ```
+
+## Adding new API behind Tyk authentication
+
+This will allow you to add your new API behind Tyk authentication so that your users
+will have to log in before seeing that API endpoint. This helps with single sign-on.
+
+**Note**: Before adding an API behind Tyk, you will have to make sure it can be launched. A good
+approach to avoid a lot of headaches is to create sections within the `docker-compose`
+file(s) for the new API. This way you can make sure that your other containers can access
+and link to the containers for the new API. This is the most tedious part of this process
+and needs to be improved, among other things.
+
+### Steps to add new API
+
+1. *Create an API file*: Look at the [tyk/confs] directory. You can use [api_candig.json.tpl]
+as an example and modify from step 2.
+2. Edit the newly created API JSON file with following
+   * `api_id` - a unique value amongst all API JSON files.
+   * `proxy.target_url` - HOST:PORT of the target API.
+   * `proxy.listen_path` - note if you give the path a trailing slash.
+   * `slug` - this is what tyk exposes your API for edits.
+   * `name` - a unique name.
+   * `config_data.SESSION_ENDPOINTS` -  note if you give it a trailing slash.
+5. Add the docker mount of the file in docker-compose volumes under Tyk's settings.
+6. Recreate the container by running `docker-compose` command again.
+7. Edit [policies.json] to add a section of new API under `access_rights`.
+8. Restart Tyk container to be sure.
+9. Edit [key_request.json.tpl] to add a section of new API under `access_rights`.
+10. Use the edited [key_request.json.tpl] with key generation Tyk-API call
+```
+$ curl ${TYK_HOST}:${TYK_PORT}/tyk/keys/create -H "x-tyk-authorization: ${TYK_SECRET}" -s -H "Content-Type: application/json" -X POST -d '{
+   ...
+    "access_rights": {
+        "21": {
+            "api_id": "21",
+            "api_name": "CanDIG",
+            "versions": ["Default"]
+        },
+        "31": {
+            "api_id": "31",
+            "api_name": "Beacon",
+            "versions": ["Default"]
+        }
+    },
+    "meta_data": {}
+}
+'
+```
+11. Reload
+```
+$ curl -H "x-tyk-authorization: ${TYK_SECRET}" -s ${TYK_HOST}:${TYK_PORT}/tyk/reload/group
+```
+You should see your API at the path you specified. Please note that this is all slash-sensitive.
+
+[tyk/confs]: ./template/config.tpl/tyk/confs
+[api_candig.json.tpl]: ./template/config.tpl/tyk/confs/api_candig.json.tpl
+[policies.json.tpl]: ./template/config.tpl/tyk/confs/policies.json.tpl
+[key_request.json.tpl]: ./template/config.tpl/tyk/confs/key_request.json.tpl
 
 ## Deployment Behind an HTTPS proxy
 
@@ -213,8 +270,6 @@ export PROXY_ADDRESS_FORWARDING=true
 
 
 ```
-
-
 
 
 #### Get a letsencrypt certificate

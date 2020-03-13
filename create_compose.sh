@@ -85,7 +85,6 @@ find ${INPUT_TEMPLATE_DIR}/config.tpl -type f -name '*.tpl' -print0 |
 
        cat $line | envsubst > ${OUPTUT_CONFIGURATION_DIR}/${output}
 
-
     done
 mkdir -p ${LOCAL_CANDIG_CONFIG_PATH}
 echo -e "issuer\tusername\tmock_data" > ${LOCAL_CANDIG_CONFIG_PATH}/access_list.tsv

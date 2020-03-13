@@ -65,4 +65,4 @@ KC_PUB_PORT=${KC_PUB_PORT%:80}
 export KC_PUB_PORT=${KC_PUB_PORT%:443}
 
 source ./script/kc_setup.sh -a  $K_HOST $K_PORT
-./script/tyk_setup.sh $T_HOST
+./script/tyk_setup.sh $T_HOST 8080
