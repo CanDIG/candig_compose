@@ -5,8 +5,9 @@
 # Directory to store the configuration
 export OUPTUT_CONFIGURATION_DIR=/tmp/candig_conf
 
-##  This should be a good key!
-export SECRET_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+##  This should be a good key:
+## cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
+export SECRET_KEY=GENERATE_A_NEW_KEY_jfksljrk32kwrl
 
 # You will be able to log this user and have acces to a test dataset
 export KC_TEST_USER=a_user
