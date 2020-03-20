@@ -96,7 +96,7 @@ echo Done
 mkdir -p ./yml/
 
 echo Creating the Candig compose yml
- cat ${INPUT_TEMPLATE_DIR}/compose.tpl/containers.yml.tpl | envsubst > ./yml/containers.yml
+ cat ${INPUT_TEMPLATE_DIR}/docker-compose.yml.tpl | envsubst > ./docker-compose.yml
 
 
  echo Done
