@@ -87,25 +87,25 @@ Make changes to `$WORKDIR/config/config` according to your needs.
 ./create_compose.sh -o $WORKDIR/config/config
 ```
 
-This creates the file `yml/containers.yml`.
+This creates the file `docker-compose.yml`.
 
 This file contains the container definitions, networking of the candig servers,
 and controls the volumes that are mounted from the host to the container.
 
-Note that the files to be mounted in `yml/containers.yml` have been created locally
+Note that the files to be mounted in `docker-compose.yml` have been created locally
 in the `${OUPTUT_CONFIGURATION_DIR}` folder has defined in the `config`
 file.
 
 ### 3. Spin up the Docker containers
 
 ```
-docker-compose -f yml/containers.yml up -d
+docker-compose up -d
 ```
 
 #### To check logs of the said containers
 
 ```
-docker-compose -f yml/containers.yml logs -f
+docker-compose logs -f
 
 ```
 
