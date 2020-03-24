@@ -1,6 +1,17 @@
 version: '3.3'
 services:
-  candig:
+  candig_pump:
+    image: tykio/tyk-pump-docker-pub:v0.5.3
+    container_name: candig_pump
+    networks:
+    - tyk
+    volumes:
+    - ${LOCAL_TYK_CONFIG_PATH}/pump.conf:/opt/tyk-pump/pump.conf
+    depends_on:
+    - tyk-redis
+    - tyk-mongo
+    - ${CONTAINER_NAME_CANDIG_GATEWAY}
+  ${CONTAINER_NAME_CANDIG_GATEWAY}:
     image: tykio/tyk-gateway:v2.9.3.1
     ports:
     - "${TYK_GATW_LOCAL_PORT}:8080"
@@ -18,16 +29,6 @@ services:
     - ${LOCAL_TYK_CONFIG_PATH}/policies.json:/opt/tyk-gateway/policies/policies.json
     depends_on:
     - tyk-redis
-  tyk-pump:
-    image: tykio/tyk-pump-docker-pub:v0.5.3
-    networks:
-    - tyk
-    volumes:
-    - ${LOCAL_TYK_CONFIG_PATH}/pump.conf:/opt/tyk-pump/pump.conf
-    depends_on:
-    - tyk-redis
-    - tyk-mongo
-    - candig
   tyk-redis:
     image: redis:4.0.14-alpine
     volumes:
@@ -41,8 +42,9 @@ services:
     - mongo-data:/data/db
     networks:
     - tyk
-  candigauth:
+  ${CONTAINER_NAME_CANDIG_AUTH}:
     image: jboss/keycloak:4.7.0.Final
+    container_name: ${CONTAINER_NAME_CANDIG_AUTH}
     ports:
     - "${KC_LOCAL_PORT}:8081"
     env_file:
@@ -53,6 +55,7 @@ services:
     - ${LOCAL_KC_CONFIG_PATH}/standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
   candig_server:
     image: c3genomics/candig_server
+    container_name: candig_server
     entrypoint:
     - candig_server
     - --host

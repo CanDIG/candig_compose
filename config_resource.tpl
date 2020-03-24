@@ -58,6 +58,9 @@ export LOCAL_TYK_CONFIG_PATH=${OUPTUT_CONFIGURATION_DIR}/tyk/confs
 export LOCAL_KC_CONFIG_PATH=${OUPTUT_CONFIGURATION_DIR}/keycloak/configuration
 export LOCAL_CANDIG_CONFIG_PATH=${OUPTUT_CONFIGURATION_DIR}/candig_server
 
+# Docker-compose naming
+export CONTAINER_NAME_CANDIG_GATEWAY=candig
+export CONTAINER_NAME_CANDIG_AUTH=candig_auth
 
 # Do not touch, this is the adress seen by tyk (in compose its the name)
 export LOCAL_CANDIG_SERVER="http://candig_server:80"
