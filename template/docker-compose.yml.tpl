@@ -10,8 +10,8 @@ services:
     depends_on:
     - tyk-redis
     - tyk-mongo
-    - candig
-  candig:
+    - ${CANDIG_GATEWAY_SERVICE_NAME}
+  ${CANDIG_GATEWAY_SERVICE_NAME}:
     image: tykio/tyk-gateway:v2.9.3.1
     ports:
     - "${TYK_GATW_LOCAL_PORT}:8080"
@@ -44,7 +44,7 @@ services:
     - tyk
   candigauth:
     image: jboss/keycloak:4.7.0.Final
-    container_name: candig_auth
+    container_name: ${CANDIG_AUTH_CONTAINER_NAME}
     ports:
     - "${KC_LOCAL_PORT}:8081"
     env_file:
