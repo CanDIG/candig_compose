@@ -13,7 +13,6 @@ services:
     - candig
   candig:
     image: tykio/tyk-gateway:v2.9.3.1
-    container_name: candig_gateway
     ports:
     - "${TYK_GATW_LOCAL_PORT}:8080"
     networks:
@@ -32,14 +31,12 @@ services:
     - tyk-redis
   tyk-redis:
     image: redis:4.0.14-alpine
-    container_name: candig_redis
     volumes:
     - redis-data:/data
     networks:
     - tyk
   tyk-mongo:
     image: mongo:3.2
-    container_name: candig_mongo
     command: ["mongod", "--smallfiles"]
     volumes:
     - mongo-data:/data/db
