@@ -1,6 +1,6 @@
 version: '3.3'
 services:
-  tyk-pump:
+  candig_pump:
     image: tykio/tyk-pump-docker-pub:v0.5.3
     container_name: candig_pump
     networks:
@@ -42,9 +42,9 @@ services:
     - mongo-data:/data/db
     networks:
     - tyk
-  candigauth:
+  ${CANDIG_AUTH_SERVICE_NAME}:
     image: jboss/keycloak:4.7.0.Final
-    container_name: ${CANDIG_AUTH_CONTAINER_NAME}
+    container_name: ${CANDIG_AUTH_SERVICE_NAME}
     ports:
     - "${KC_LOCAL_PORT}:8081"
     env_file:
