@@ -13,6 +13,7 @@ services:
     - ${CONTAINER_NAME_CANDIG_GATEWAY}
   ${CONTAINER_NAME_CANDIG_GATEWAY}:
     image: tykio/tyk-gateway:v2.9.3.1
+    container_name: ${CONTAINER_NAME_CANDIG_GATEWAY}
     ports:
     - "${TYK_GATW_LOCAL_PORT}:8080"
     networks:

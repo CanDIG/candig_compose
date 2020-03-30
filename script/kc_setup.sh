@@ -59,7 +59,7 @@ add_user() {
 # CONTAINER_NAME_CANDIG_AUTH is the name of the keycloak server inside the compose network
 docker exec ${CONTAINER_NAME_CANDIG_AUTH} /opt/jboss/keycloak/bin/add-user-keycloak.sh -u ${KC_TEST_USER} -p ${KC_TEST_USER_PW} -r ${KC_REALM}
 echo restarting Keycloak
-docker restart ${CONT_ID}
+docker restart ${CONTAINER_NAME_CANDIG_AUTH}
 }
 
 ###############
