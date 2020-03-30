@@ -5,6 +5,9 @@
 # Directory to store the configuration
 export OUPTUT_CONFIGURATION_DIR=/tmp/candig_conf
 
+# directory to keep permanent data
+export DATA_DIR=~/home/candig_data
+
 ##  This should be a good key:
 ## cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
 export SECRET_KEY=GENERATE_A_NEW_KEY_jfksljrk32kwrl

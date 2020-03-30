@@ -57,11 +57,9 @@ valid_json () {
 add_user() {
 
 # CONTAINER_NAME_CANDIG_AUTH is the name of the keycloak server inside the compose network
-CONT_ID=$(docker ps  | grep ${CONTAINER_NAME_CANDIG_AUTH} | cut -d " " -f1)
-docker exec ${CONT_ID} keycloak/bin/add-user-keycloak.sh -u ${KC_TEST_USER} -p ${KC_TEST_USER_PW} -r ${KC_REALM}
+docker exec ${CONTAINER_NAME_CANDIG_AUTH} /opt/jboss/keycloak/bin/add-user-keycloak.sh -u ${KC_TEST_USER} -p ${KC_TEST_USER_PW} -r ${KC_REALM}
 echo restarting Keycloak
 docker restart ${CONT_ID}
-
 }
 
 ###############
@@ -185,3 +183,5 @@ export KC_SECRET=$(get_secret  ${KC_REALM})
 if $ADD_USER ; then
   add_user
 fi
+while !  docker logs --tail 5  ${CONTAINER_NAME_CANDIG_AUTH} | grep "Admin console listening on http://127.0.0.1:9990" ; do sleep 1 ; done
+docker exec ${CONTAINER_NAME_CANDIG_AUTH}  rm /opt/jboss/keycloak/standalone/configuration/keycloak-add-user.json 2> /dev/null
