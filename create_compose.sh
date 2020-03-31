@@ -23,8 +23,8 @@ while getopts "do:" opt; do
     o)
       CONFIG_FILE=$OPTARG
       ;;
-    c)
-      DELETE_CONFIG_FOLDER=true
+    d)
+      DELETE_CONFIG_VOLUME=true
       ;;
    \?)
       usage
@@ -66,7 +66,7 @@ KC_HOST_NAME="${KC_PUBLIC_URL#http://}"
 export KC_HOST_NAME="${KC_HOST_NAME=#https://}"
 
 
-if [ -n "${DELETE_CONFIG_FOLDER}" ]; then
+if [ -n "${DELETE_CONFIG_VOLUME}" ]; then
   echo deleting yml_mongo-data yml_redis-data if present
   docker volume rm yml_mongo-data yml_redis-data 2> /dev/null
 
@@ -85,7 +85,6 @@ find ${INPUT_TEMPLATE_DIR}/config.tpl -type f -name '*.tpl' -print0 |
 
        cat $line | envsubst > ${OUPTUT_CONFIGURATION_DIR}/${output}
 
-
     done
 mkdir -p ${LOCAL_CANDIG_CONFIG_PATH}
 echo -e "issuer\tusername\tmock_data" > ${LOCAL_CANDIG_CONFIG_PATH}/access_list.tsv
@@ -94,11 +93,12 @@ echo -e "${KC_PUBLIC_URL}${KC_PUB_PORT}/auth/realms/${KC_REALM}\t${KC_TEST_USER}
 
 echo Done
 
-mkdir -p ./yml/
-
 echo Creating the Candig compose yml
- cat ${INPUT_TEMPLATE_DIR}/compose.tpl/volumes.yml.tpl | envsubst > ./yml/volumes.yml
- cat ${INPUT_TEMPLATE_DIR}/compose.tpl/containers_network.yml.tpl | envsubst > ./yml/containers_network.yml
- 
+ cat ${INPUT_TEMPLATE_DIR}/docker-compose.yml.tpl | envsubst > ./docker-compose.yml
+
+echo Creating data dir $DATA_DIR
+mkdir -p $DATA_DIR/keycloak-db
+mkdir -p $DATA_DIR/main_server
+
 
  echo Done
