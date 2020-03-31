@@ -99,6 +99,7 @@ echo Creating the Candig compose yml
 echo Creating data dir $DATA_DIR
 mkdir -p $DATA_DIR/keycloak-db
 mkdir -p $DATA_DIR/main_server
+chmod 777 $DATA_DIR/keycloak-db $DATA_DIR/main_server
 
 
  echo Done
