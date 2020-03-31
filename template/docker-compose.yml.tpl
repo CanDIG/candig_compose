@@ -25,13 +25,6 @@ services:
     - redis-data:/data
     networks:
     - tyk
-  tyk-mongo:
-    image: mongo:3.2
-    command: ["mongod", "--smallfiles"]
-    volumes:
-    - mongo-data:/data/db
-    networks:
-    - tyk
   ${CONTAINER_NAME_CANDIG_AUTH}:
     image: jboss/keycloak:9.0.2
     container_name: ${CONTAINER_NAME_CANDIG_AUTH}
@@ -67,7 +60,6 @@ services:
 
 volumes:
   redis-data:
-  mongo-data:
 
 networks:
   tyk:
