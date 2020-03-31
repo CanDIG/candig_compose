@@ -96,5 +96,9 @@ echo Done
 echo Creating the Candig compose yml
  cat ${INPUT_TEMPLATE_DIR}/docker-compose.yml.tpl | envsubst > ./docker-compose.yml
 
+echo Creating data dir $DATA_DIR
+mkdir -p $DATA_DIR/keycloak-db
+mkdir -p $DATA_DIR/main_server
+
 
  echo Done

@@ -2,6 +2,7 @@ version: '3.3'
 services:
   ${CONTAINER_NAME_CANDIG_GATEWAY}:
     image: tykio/tyk-gateway:v2.9.3.1
+    container_name: ${CONTAINER_NAME_CANDIG_GATEWAY}
     ports:
     - "${TYK_GATW_LOCAL_PORT}:8080"
     networks:
@@ -32,8 +33,9 @@ services:
     networks:
     - tyk
   ${CONTAINER_NAME_CANDIG_AUTH}:
-    image: jboss/keycloak:4.7.0.Final
+    image: jboss/keycloak:9.0.2
     container_name: ${CONTAINER_NAME_CANDIG_AUTH}
+    command: ["-b", "0.0.0.0", "-Dkeycloak.migration.strategy=IGNORE_EXISTING"]
     ports:
     - "${KC_LOCAL_PORT}:8081"
     env_file:
@@ -41,6 +43,7 @@ services:
     networks:
     - tyk
     volumes:
+    - ${DATA_DIR}/keycloak-db:/opt/jboss/keycloak/standalone/data
     - ${LOCAL_KC_CONFIG_PATH}/standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
   candig_server:
     image: c3genomics/candig_server
