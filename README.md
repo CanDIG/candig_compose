@@ -111,22 +111,10 @@ docker-compose logs -f
 
 ### 4. Configure your CanDIG setup
 
-#### Development
-
 When all servers run on the localhost, true if you used the docker-compose recipe.
 
 ```
-./candig_setup.sh \
--o  $WORKDIR/config -k localhost:8081 -t localhost
-```
-
-#### Production
-
-It might happen in production that the keycloak and tyk server are not running on the local host and that they have 
-not been started with compose or container. You can still configure then with the  `candig_setup.sh` script: 
-```
-./candig_setup.sh \
--o  $WORKDIR/config -k keycloachost:8081 -t tykhost
+./candig_setup.sh -o  $WORKDIR/config -k localhost:8081 -t localhost
 ```
 
 ## Adding new API behind Tyk authentication
