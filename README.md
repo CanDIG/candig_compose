@@ -309,7 +309,33 @@ and you are good to go.
 ## Troubleshooting Tips
 
 ### Connection to Keycloak at {KC_PUBLIC_URL}:{KC_PUBLIC_PORT} works but connection to {CANDIG_PUBLIC_URL}:{CANDIG_PUBLIC_PORT} does not work
-In the config file prefix the domain name for CANDIG_PUBLIC_URL and KC_PUBLIC_URL with “http://” (without quotation marks).
+
+In the config file prefix the domain name for `CANDIG_PUBLIC_URL`
+and `KC_PUBLIC_URL` with `http://`.
 
 ### Getting a redirect_uri error at {CANDIG_PUBLIC_URL}:{CANDIG_PUBLIC_PORT}
-Look for the redirect_uri parameter in the address bar. Copy the text that it is equal to. Go to Keycloak and log in. On the left side underneath Configure, select Clients. Select cq_candig. In the Valid Redirect URIs box, paste the text that you copied. Click Save and go to {CANDIG_PUBLIC_URL}:{CANDIG_PUBLIC_PORT} again. It should be showing the login page now.
+
+Look for the `redirect_uri` parameter in the address bar. Copy the text that
+it is equal to. Go to Keycloak and log in. On the left side underneath
+Configure, select Clients. Select `cq_candig`. In the Valid Redirect URIs box,
+paste the text that you copied. Click Save and go to
+`{CANDIG_PUBLIC_URL}:{CANDIG_PUBLIC_PORT}` again. It should be showing
+the login page now.
+
+### Unauthenticated users do not get redirected to Keycloak/IdP
+
+This is likely due to the fact that your Tyk APIs `SESSION_ENDPOINTS` array
+is not properly set. This array needs to have strings with full path, even if you
+have `"strip_listen_path": true,` set in the API config. Example: if your
+API has the base segment or `listen_path` as `/variants` and there are two
+additional segments in it, then your `SESSION_ENDPOINTS` config needs to be
+something like:
+
+```
+	"SESSION_ENDPOINTS": [
+	    "/variants",
+        "/variants/search",
+        "/variants/display"
+	],
+```
+
