@@ -322,6 +322,8 @@ paste the text that you copied. Click Save and go to
 `{CANDIG_PUBLIC_URL}:{CANDIG_PUBLIC_PORT}` again. It should be showing
 the login page now.
 
+
+
 ### Unauthenticated users do not get redirected to Keycloak/IdP
 
 This is likely due to the fact that your Tyk APIs `SESSION_ENDPOINTS` array
@@ -332,10 +334,10 @@ additional segments in it, then your `SESSION_ENDPOINTS` config needs to be
 something like:
 
 ```
-	"SESSION_ENDPOINTS": [
-	    "/variants",
-        "/variants/search",
-        "/variants/display"
-	],
+"SESSION_ENDPOINTS": [
+    "/variants",
+    "/variants/search",
+    "/variants/display"
+],
 ```
 
