@@ -305,3 +305,11 @@ Add the following to a cron tab ran by root (eg `sudo crontab -e`)
 ```
 
 and you are good to go.
+
+## Troubleshooting Tips
+
+### Connection to Keycloak at {KC_PUBLIC_URL}:{KC_PUBLIC_PORT} works but connection to {CANDIG_PUBLIC_URL}:{CANDIG_PUBLIC_PORT} does not work
+In the config file prefix the domain name for CANDIG_PUBLIC_URL and KC_PUBLIC_URL with “http://” (without quotation marks).
+
+### Getting a redirect_uri error at {CANDIG_PUBLIC_URL}:{CANDIG_PUBLIC_PORT}
+Look for the redirect_uri parameter in the address bar. Copy the text that it is equal to. Go to Keycloak and log in. On the left side underneath Configure, select Clients. Select cq_candig. In the Valid Redirect URIs box, paste the text that you copied. Click Save and go to {CANDIG_PUBLIC_URL}:{CANDIG_PUBLIC_PORT} again. It should be showing the login page now.
