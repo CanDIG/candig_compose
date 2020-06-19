@@ -8,8 +8,6 @@
 echo "Running Docker Compose"
 docker-compose up -d
 
-echo `docker inspect postgres_kc | grep IPAddress`
-
 echo "Modifying Postgres Container"
 docker exec postgres_kc ./tmp/postgres_setup.sh
 wait
