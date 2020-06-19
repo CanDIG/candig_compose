@@ -72,9 +72,9 @@ if [ -n "${DELETE_CONFIG_VOLUME}" ]; then
 
 fi
 
-mkdir -p "${OUPTUT_CONFIGURATION_DIR}"
+mkdir -p "${OUTPUT_CONFIGURATION_DIR}"
 
-cp -r "${INPUT_TEMPLATE_DIR}"/config.tpl/*  "${OUPTUT_CONFIGURATION_DIR}"
+cp -r "${INPUT_TEMPLATE_DIR}"/config.tpl/*  "${OUTPUT_CONFIGURATION_DIR}"
 
 echo Creating the Candig config files
 find ${INPUT_TEMPLATE_DIR}/config.tpl -type f -name '*.tpl' -print0 |
@@ -83,7 +83,7 @@ find ${INPUT_TEMPLATE_DIR}/config.tpl -type f -name '*.tpl' -print0 |
         output=${line#${INPUT_TEMPLATE_DIR}/config.tpl/}
         output=${output%.tpl}
 
-       cat $line | envsubst > ${OUPTUT_CONFIGURATION_DIR}/${output}
+       cat $line | envsubst > ${OUTPUT_CONFIGURATION_DIR}/${output}
 
     done
 mkdir -p ${LOCAL_CANDIG_CONFIG_PATH}

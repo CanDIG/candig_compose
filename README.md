@@ -99,8 +99,13 @@ file.
 ### 3. Spin up the Docker containers
 
 ```
-docker-compose up -d
+./run_compose.sh
 ```
+
+This runs docker-compose as well as launches a shell script within the Postgres
+container to modify the user_attribute column in the Keycloak schema. This is required
+in order to handle the GA4GH Passports which are much larger than the standard char size
+set by Keycloak. 
 
 #### To check logs of the said containers
 

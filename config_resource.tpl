@@ -3,7 +3,7 @@
 
 
 # Directory to store the configuration
-export OUPTUT_CONFIGURATION_DIR=/tmp/candig_conf
+export OUTPUT_CONFIGURATION_DIR=/tmp/candig_conf
 
 # directory to keep permanent data
 export DATA_DIR=~/home/candig_data
@@ -20,7 +20,9 @@ export KC_TEST_USER_PW=a_password
 export KC_ADMIN_USER=a_default_to_change_admin_per
 export KC_PW=a_default_to_change_kfjaskdihfowiehsgdv
 
-
+# Postgres admin
+export POSTGRES_USER=keycloak
+export POSTGRES_PASSWORD=password
 
 #Tyk admin
 export CANDIG_TYK_USERNAME=a_default_to_change_test_bed@mail.com
@@ -56,14 +58,18 @@ export TYK_GATW_LOCAL_PORT=8080
 export KC_LOCAL_PORT=8081
 export KC_LOCAL_PORT_SSL=443
 
+export POSTGRES_PORT=5432
 
-export LOCAL_TYK_CONFIG_PATH=${OUPTUT_CONFIGURATION_DIR}/tyk/confs
-export LOCAL_KC_CONFIG_PATH=${OUPTUT_CONFIGURATION_DIR}/keycloak/configuration
-export LOCAL_CANDIG_CONFIG_PATH=${OUPTUT_CONFIGURATION_DIR}/candig_server
+
+export LOCAL_TYK_CONFIG_PATH=${OUTPUT_CONFIGURATION_DIR}/tyk/confs
+export LOCAL_KC_CONFIG_PATH=${OUTPUT_CONFIGURATION_DIR}/keycloak/configuration
+export LOCAL_CANDIG_CONFIG_PATH=${OUTPUT_CONFIGURATION_DIR}/candig_server
+export LOCAL_POSTGRES_CONFIG_PATH=${OUTPUT_CONFIGURATION_DIR}/postgres
 
 # Docker-compose naming
 export CONTAINER_NAME_CANDIG_GATEWAY=candig
 export CONTAINER_NAME_CANDIG_AUTH=candig_auth
+export CONTAINER_NAME_POSTGRES_DB=postgres_kc
 
 # Do not touch, this is the adress seen by tyk (in compose its the name)
 export LOCAL_CANDIG_SERVER="http://candig_server:80"

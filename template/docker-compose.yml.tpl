@@ -25,19 +25,39 @@ services:
     - redis-data:/data
     networks:
     - tyk
+  ${CONTAINER_NAME_POSTGRES_DB}:
+    image: postgres
+    container_name: ${CONTAINER_NAME_POSTGRES_DB}
+    ports:
+    - "${POSTGRES_PORT}:5432"
+    restart: always
+    environment:
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ${LOCAL_POSTGRES_CONFIG_PATH}/scripts/postgres_setup.sh:/tmp/postgres_setup.sh
+    networks:
+    - tyk
   ${CONTAINER_NAME_CANDIG_AUTH}:
     image: jboss/keycloak:9.0.2
     container_name: ${CONTAINER_NAME_CANDIG_AUTH}
     command: ["-b", "0.0.0.0", "-Dkeycloak.migration.strategy=IGNORE_EXISTING"]
+    depends_on:
+    - ${CONTAINER_NAME_POSTGRES_DB}
     ports:
     - "${KC_LOCAL_PORT}:8081"
     env_file:
     - ${LOCAL_KC_CONFIG_PATH}/secrets.env
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: ${CONTAINER_NAME_POSTGRES_DB}
+      DB_DATABASE: keycloak
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
     networks:
     - tyk
     volumes:
     - ${DATA_DIR}/keycloak-db:/opt/jboss/keycloak/standalone/data
-    - ${LOCAL_KC_CONFIG_PATH}/standalone-ha.xml:/opt/jboss/keycloak/standalone/configuration/standalone-ha.xml
   candig_server:
     image: c3genomics/candig_server
     container_name: candig_server
