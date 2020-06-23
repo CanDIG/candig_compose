@@ -99,13 +99,18 @@ file.
 ### 3. Spin up the Docker containers
 
 ```
-./run_compose.sh
+docker-compose up -d
+```
+### 4. Modify the Postgres container
+
+```
+./script/modify_postgres.sh
 ```
 
-This runs docker-compose as well as launches a shell script within the Postgres
-container to modify the user_attribute column in the Keycloak schema. This is required
-in order to handle the GA4GH Passports which are much larger than the standard char size
-set by Keycloak. 
+This script executes a shell script within the Postgres container to modify the user_attribute column in the Keycloak schema. This is required
+in order to handle the GA4GH Passports which are much larger than the standard char size set by Keycloak.
+
+Upon successful modification, the script within the container will be deleted.
 
 #### To check logs of the said containers
 
@@ -114,7 +119,7 @@ docker-compose logs -f
 
 ```
 
-### 4. Configure your CanDIG setup
+### 5. Configure your CanDIG setup
 
 #### Development
 
