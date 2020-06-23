@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# This script checks the schemas within Postgres and modifies Keycloak's user_attribute
+# table to utilize a VARCHAR value of indeterminate length rather than the base 255 characters.
+
+# The main loop will continue until the schema is found, which should occur once the Keycloak
+# container is fully operational.
+
+
 while true
 do
     EXISTS=`psql -X -A -U keycloak -c "SELECT EXISTS (
@@ -17,4 +24,13 @@ do
         break
     fi
 done
+
+echo "Confirming schema update"
+VERIFY=`psql -X -A -U keycloak -c "\d+ user_attribute" | grep -o "value|character varying|"`
+
+if [ "$VERIFY" = "value|character varying|" ] ; then
+    echo "Verified"
+else
+    echo not Found
+fi
 
