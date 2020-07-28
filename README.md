@@ -59,7 +59,28 @@ docker system prune -a -f --volumes
 After this, you can continue recreating the docker containers via
 `docker-compose` (step 3 below).
 
-## Deploy on `localhost`
+## Deploy locally
+
+Using localhost as a public URL (such as for CANDIG_PUBLIC_URL
+or KC_PUBLIC_URL, in the config file) will not work out of the box
+based on how docker deals with networking. Using host networking,
+that is with network_mode: host in the compose config, might have
+let us work with localhost but it does not function in this current
+setup (Keycloak throws errors).
+
+Another option which might be worth taking a look later on is to
+use the container names as hostnames, this would require re-working
+a bit how KC and tyk are configured.
+
+Assuming your local DNS daemon is listening to docker and its 
+containers (which systemd-resolved will NOT do, ubuntu users beware,
+you may want to look at dnsmasq: https://stackoverflow.com/a/39400887)
+what I recommend as a temporary measure is to use some hostname
+for the three "*_URL" variables in the config and add corresponding
+entries in /etc/hosts, these pointing to your current IP (which
+yes, will change depending on your local network, you can't use
+127.0.0.1 though since from the container point of view 127.0.0.1
+is itself and not the host).
 
 ### 0. Create a working directory
 
@@ -113,7 +134,8 @@ docker-compose logs -f
 
 #### Development
 
-When all servers run on the localhost, true if you used the docker-compose recipe.
+Now that the containers are running, we have to create the credentials in Keycloak
+and forward the relevant information to tyk.
 
 ```
 ./candig_setup.sh \
