@@ -24,7 +24,6 @@ See instructions to install Docker: https://runnable.com/docker/getting-started/
 For this setup to work without a lot of changes, please make sure should
 be available on the machine where the CanDIG containers are deployed.
 
-* `3000`
 * `8081`
 * `8080`
 
