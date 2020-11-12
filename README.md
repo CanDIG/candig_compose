@@ -229,12 +229,14 @@ Specific `$WORKDIR/config` setup:
 
 Make sure the public address starts with `https` and that the public PORT 
 are `443`, the you will be behind a proxy, so `PROXY_ADDRESS_FORWARDING=true`
+and now `SESSION_COOKIE_SECURE=True` (note different capitalizations):
 ```
 export CANDIG_PUBLIC_URL=https://<public  TYK address>
 export CANDIG_PUBLIC_PORT=443
 export KC_PUBLIC_URL=https://<public KC address>
 export KC_PUBLIC_PORT=443
 export PROXY_ADDRESS_FORWARDING=true
+export SESSION_COOKIE_SECURE=True
 ```
 
 #### The Apache httpd config
