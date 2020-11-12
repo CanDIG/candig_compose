@@ -24,8 +24,8 @@ See instructions to install Docker: https://runnable.com/docker/getting-started/
 For this setup to work without a lot of changes, please make sure should
 be available on the machine where the CanDIG containers are deployed.
 
-* `8081`
-* `8080`
+* `8081` - keycloak http
+* `8080` - tyk API gateway
 
 Any other ports as more APIs are added.
 
