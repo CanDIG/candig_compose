@@ -151,7 +151,7 @@ It might happen in production that the keycloak and tyk server are not running o
 not been started with compose or container. You can still configure then with the  `candig_setup.sh` script: 
 ```
 ./candig_setup.sh \
--o  $WORKDIR/config/conig -k keycloakhost:8081 -t tykhost
+-o  $WORKDIR/config/config -k keycloakhost:8081 -t tykhost
 ```
 
 ## Adding new API behind Tyk authentication
