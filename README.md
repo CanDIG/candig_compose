@@ -164,6 +164,8 @@ and needs to be improved, among other things.
 
 ### Steps to add new API
 
+If at some point you want to add a new authenticated API behind the tyk gateway, these are the steps to take:
+
 1. *Create an API file*: Look at the [tyk/confs] directory. You can use [api_candig.json.tpl]
 as an example and modify from step 2.
 2. Edit the newly created API JSON file with following
