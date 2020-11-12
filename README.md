@@ -134,12 +134,16 @@ docker-compose logs -f
 
 #### Development
 
-Now that the containers are running, we have to create the credentials in Keycloak
-and forward the relevant information to tyk.
+Now that the containers are running, we have to configure the containers by 
+creating the credentials in Keycloak and forward the relevant information to tyk.
+
+The script connects to the containers locally, so use local, not public, hostnames;
+and for ports, keycloak can be connected to locally without TLS (so port 8081 rather
+than 8443):
 
 ```
 ./candig_setup.sh \
--o  $WORKDIR/config -k localhost:8081 -t localhost
+-o  $WORKDIR/config/config -k localhost:8081 -t localhost
 ```
 
 #### Production
@@ -148,7 +152,7 @@ It might happen in production that the keycloak and tyk server are not running o
 not been started with compose or container. You can still configure then with the  `candig_setup.sh` script: 
 ```
 ./candig_setup.sh \
--o  $WORKDIR/config -k keycloachost:8081 -t tykhost
+-o  $WORKDIR/config/conig -k keycloakhost:8081 -t tykhost
 ```
 
 ## Adding new API behind Tyk authentication
