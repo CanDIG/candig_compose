@@ -91,6 +91,3 @@ export AUTH_API_SLUG="authentication"
 export CANDIG_API_NAME="Candig Api"
 export CANDIG_API_ID="21"
 export CANDIG_API_SLUG="candig"
-
-# do not change
-export TYK_DASHB_LOCAL_PORT=3000

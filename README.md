@@ -24,9 +24,8 @@ See instructions to install Docker: https://runnable.com/docker/getting-started/
 For this setup to work without a lot of changes, please make sure should
 be available on the machine where the CanDIG containers are deployed.
 
-* `3000`
-* `8081`
-* `8080`
+* `8081` - keycloak http
+* `8080` - tyk API gateway
 
 Any other ports as more APIs are added.
 
@@ -134,12 +133,16 @@ docker-compose logs -f
 
 #### Development
 
-Now that the containers are running, we have to create the credentials in Keycloak
-and forward the relevant information to tyk.
+Now that the containers are running, we have to configure the containers by 
+creating the credentials in Keycloak and forward the relevant information to tyk.
+
+The script connects to the containers locally, so use local, not public, hostnames;
+and for ports, keycloak can be connected to locally without TLS (so port 8081 rather
+than 8443):
 
 ```
 ./candig_setup.sh \
--o  $WORKDIR/config -k localhost:8081 -t localhost
+-o  $WORKDIR/config/config -k localhost:8081 -t localhost
 ```
 
 #### Production
@@ -148,7 +151,7 @@ It might happen in production that the keycloak and tyk server are not running o
 not been started with compose or container. You can still configure then with the  `candig_setup.sh` script: 
 ```
 ./candig_setup.sh \
--o  $WORKDIR/config -k keycloachost:8081 -t tykhost
+-o  $WORKDIR/config/config -k keycloakhost:8081 -t tykhost
 ```
 
 ## Adding new API behind Tyk authentication
@@ -163,6 +166,8 @@ and link to the containers for the new API. This is the most tedious part of thi
 and needs to be improved, among other things.
 
 ### Steps to add new API
+
+If at some point you want to add a new authenticated API behind the tyk gateway, these are the steps to take:
 
 1. *Create an API file*: Look at the [tyk/confs] directory. You can use [api_candig.json.tpl]
 as an example and modify from step 2.
@@ -213,89 +218,41 @@ You should see your API at the path you specified. Please note that this is all 
 
 If you have a working http deployement, you can add these modification 
 to the candig and httpd configs.
-  
+
 Here, the proxy is using a encryption certificate while the candig_container
 tools are all unencrypted. This mean that to use this setup, you need to 
 consider the network behind the proxy to be secure.
 
 #### The config file
+
 Specific `$WORKDIR/config` setup:
 
 Make sure the public address starts with `https` and that the public PORT 
 are `443`, the you will be behind a proxy, so `PROXY_ADDRESS_FORWARDING=true`
+and now `SESSION_COOKIE_SECURE=True` (note different capitalizations):
 ```
 export CANDIG_PUBLIC_URL=https://<public  TYK address>
 export CANDIG_PUBLIC_PORT=443
 export KC_PUBLIC_URL=https://<public KC address>
 export KC_PUBLIC_PORT=443
 export PROXY_ADDRESS_FORWARDING=true
+export SESSION_COOKIE_SECURE=True
 ```
 
 #### The Apache httpd config
 
-```
-<VirtualHost <public KC ip>:443>
-   ServerName <public KC address>
-   RemoteIPHeader X-Forwarded-For 
-   RequestHeader set X-Forwarded-Proto "https"
-   SSLProxyEngine On
-   SSLProxyVerify none
-   SSLProxyCheckPeerCN Off
-   SSLProxyCheckPeerExpire Off
-   ProxyPreserveHost On
-   ProxyPass /auth http://<local KC ip>:<local KC port>/auth
-   ProxyPassReverse /auth http://<local KC ip>:<local KC port>/auth
-
-   SSLEngine on
-   SSLProtocol all -SSLv2 -SSLv3 +TLSv1.2
-   SSLCertificateFile       /<path_to>/cert.pem
-   SSLCertificateKeyFile    /<path_to>/privkey.pem
-   SSLCertificateChainFile  /<path_to>/fullchain.pem
-</VirtualHost>
-
-
-<VirtualHost <public  TYK ip>:443>
-   ServerName <public  TYK address>
-   RemoteIPHeader X-Forwarded-For
-   RequestHeader set X-Forwarded-Proto "https"
-   SSLProxyEngine On
-   SSLProxyVerify none
-   SSLProxyCheckPeerCN Off
-   SSLProxyCheckPeerExpire Off
-   ProxyPreserveHost On
-   ProxyPass / http://<local  TYK ip>:<local  TYK port>/
-   ProxyPassReverse / http://<local  TYK ip>:<local  TYK port>/
-
-   SSLEngine on
-   SSLProtocol all -SSLv2 -SSLv3  +TLSv1.2
-   SSLCertificateFile       /<path_to>/cert.pem
-   SSLCertificateKeyFile    /<path_to>/privkey.pem
-   SSLCertificateChainFile  /<path_to>/fullchain.pem
-</VirtualHost>
-
-
-# If you want to redirect http to https use the folowing virtual host
-<VirtualHost *:80> 
-   ServerName  candig.calculquebec.ca
-   #RemoteIPHeader X-Forwarded-For
-   #ProxyPreserveHost On
-   Redirect permanent / https://candig.calculquebec.ca/
-</VirtualHost>
-
-<VirtualHost *:80> 
-   ServerName  candigauth.calculquebec.ca
-   #RemoteIPHeader X-Forwarded-For
-   #ProxyPreserveHost On
-   Redirect permanent / https://candigauth.calculquebec.ca/
-</VirtualHost>
-
+To add apache as a TLS-terminating reverse proxy, you can install and startup 
+apache; you'll have to make sure the remoteip, headers, ssl, proxy, and proxy_http
+modules are enabled:
 
 ```
-
+a2enmod remoteip headers ssl proxy proxy_http
+```
 
 #### Get a letsencrypt certificate
 
 Get the certificate bot from (https://certbot.eff.org)
+
 ```
 wget https://dl.eff.org/certbot-auto
 sudo mv certbot-auto /usr/local/bin/certbot-auto
@@ -319,7 +276,6 @@ certbot-auto certonly   --standalone -d <public TYK address>   -d <public KC add
 if you have no VirtualHost, redirection or other, running on port 80.
 
 
-
 Add the following to a cron tab ran by root (eg `sudo crontab -e`)
 
 ```
@@ -327,6 +283,71 @@ Add the following to a cron tab ran by root (eg `sudo crontab -e`)
 ```
 
 and you are good to go.
+
+#### Site Configuration
+
+In [httpd_tls_proxy.conf](./httpd_tls_proxy.conf) is a configuration file that can
+be used to set up the virtual hosts (for instance, by overwriting 
+/etc/apache2/site-enabled/000-default.conf on ubuntu):
+
+```
+<VirtualHost *:443>
+   ServerName <public KC address>
+   RemoteIPHeader X-Forwarded-For 
+   RequestHeader set X-Forwarded-Proto "https"
+   SSLProxyEngine On
+   SSLProxyVerify none
+   SSLProxyCheckPeerCN Off
+   SSLProxyCheckPeerExpire Off
+   ProxyPreserveHost On
+   ProxyPass /auth http://<local KC ip>:<local KC port>/auth
+   ProxyPassReverse /auth http://<local KC ip>:<local KC port>/auth
+
+   SSLEngine on
+   SSLProtocol all -SSLv2 -SSLv3 +TLSv1.2
+   SSLCertificateFile       /etc/letsencrypt/live/candig.public.adress/cert.pem
+   SSLCertificateKeyFile    /etc/letsencrypt/live/candig.public.adress/privkey.pem
+   SSLCertificateChainFile  /etc/letsencrypt/live/candig.public.adress/fullchain.pem
+</VirtualHost>
+
+
+<VirtualHost *:443>
+   ServerName <public  TYK address>
+   RemoteIPHeader X-Forwarded-For
+   RequestHeader set X-Forwarded-Proto "https"
+   SSLProxyEngine On
+   SSLProxyVerify none
+   SSLProxyCheckPeerCN Off
+   SSLProxyCheckPeerExpire Off
+   ProxyPreserveHost On
+   ProxyPass / http://<local  TYK ip>:<local  TYK port>/
+   ProxyPassReverse / http://<local  TYK ip>:<local  TYK port>/
+
+   SSLEngine on
+   SSLProtocol all -SSLv2 -SSLv3  +TLSv1.2
+   SSLCertificateFile       /etc/letsencrypt/live/candigauth.public.adress/cert.pem
+   SSLCertificateKeyFile    /etc/letsencrypt/live/candigauth.public.adress/privkey.pem
+   SSLCertificateChainFile  /etc/letsencrypt/live/candigauth.public.adress/fullchain.pem
+</VirtualHost>
+
+
+# If you want to redirect http to https use the folowing virtual host
+<VirtualHost *:80> 
+   ServerName  <public Tyk address>
+   #RemoteIPHeader X-Forwarded-For
+   #ProxyPreserveHost On
+   Redirect permanent / https://<public Tyk Address>
+</VirtualHost>
+
+<VirtualHost *:80> 
+   ServerName  <public Keycloak address>
+   #RemoteIPHeader X-Forwarded-For
+   #ProxyPreserveHost On
+   Redirect permanent / https://<public Keycloak Address>
+</VirtualHost>
+
+```
+
 
 ## Troubleshooting Tips
 
